@@ -11,25 +11,25 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 ev3 = EV3Brick()
 
 # defining vars
-a = 1
-motorSpeed = 200
-motorTarget = 100
-distanceSensor = ''
+motorSpeed = 100
+motorTarget = 0
+line_sensor = ColorSensor(Port.S1)
+block_sensor = UltrasonicSensor(Port.S2)
 leftMotor = Motor(Port.B)
 rightMotor = Motor(Port.C)
-Ev3Drive = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
+Ev3 = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
+GREY = 11
+WHITE = 23
+threshold = (GREY + WHITE) / 2
+PROPORTIONAL_GAIN = 2.1
 
 
 # Execute
-if a == 1:
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    
-    
+while True:
+    while block_sensor.distance() > 100:
+        if line_sensor.reflection() >= threshold:
+            Ev3.straight(20)
+        else:
+            Ev3.turn(-30)
+    #Ev3.stop()
+    #Ev3.straight(100)
