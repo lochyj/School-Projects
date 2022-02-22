@@ -22,13 +22,5 @@ Ev3Drive = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
 
 # Execute
 if a == 1:
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    Ev3Drive.turn(90)
-    Ev3Drive.straight(300)
-    
+    Ev3Drive.straight(1000)
+    Ev3Drive.straight(-1000)
