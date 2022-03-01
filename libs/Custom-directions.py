@@ -53,9 +53,9 @@ def execute(directions):
 
 # directions string
 
-directions = "straight(150) right(90) straight(150) right(90) straight(150) right(90) straight(150) right(90) straight(150) right(90)"
+directions = "straight(700) right(20) straight(300) right(90) straight(450) left(120) straight(300)"
 
 
 # Execute
 if True: 
-    execute(directions)
+    execute()
