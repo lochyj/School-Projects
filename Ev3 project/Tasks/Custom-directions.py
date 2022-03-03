@@ -58,4 +58,4 @@ directions = "straight(700) right(20) straight(300) right(90) straight(450) left
 
 # Execute
 if True: 
-    execute()
+    execute(directions)

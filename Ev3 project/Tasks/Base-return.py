@@ -21,26 +21,38 @@ leftMotor = Motor(Port.B)
 rightMotor = Motor(Port.C)
 # Ev3Drive is the function that makes the robot drive 
 # This also isnt nessacary but it help with the readability of the code
-Ev3Drive = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
+Ev3 = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
+
+# Custom direction function
+def execute(directions):
+    distanceDriven = 0
+    # split the string into a list of strings
+    directions = directions.split()
+    # for each string in the list
+    for direction in directions:
+        # split the string into a list of strings
+        direction = direction.split("(")
+        # remove the remaining brackets
+        direction[1] = direction[1].replace(")", "")
+        # if the first string in the list is "left"
+        if direction[0] == "left":
+            # turn left
+            Ev3.turn(-int(direction[1]))
+            print(int(direction[1]))
+        # if the first string in the list is "right"
+        elif direction[0] == "right":
+            # turn right
+            Ev3.turn(int(direction[1]))
+            print(int(direction[1]))
+        # if the first string in the list is "straight"
+        elif direction[0] == "straight":
+            # drive straight
+            Ev3.straight(int(direction[1]))
+            print(int(direction[1]))
+            
+directions = "straight(100) right(90) straight(100) right(90) straight(100) right(90) straight(100) right(90)"
+
 
 # Execute
-# There is a weird bug that makes the robot not respond unless it is in a while or if statement
-if True:
-    # Drive straight for 300mm
-    Ev3Drive.straight(300)
-    # turn 90 degrees
-    Ev3Drive.turn(90)
-    # Drive straight for 300mm
-    Ev3Drive.straight(300)
-    # turn 90 degrees
-    Ev3Drive.turn(90)
-    # Drive straight for 300mm
-    Ev3Drive.straight(300)
-    # turn 90 degrees
-    Ev3Drive.turn(90)
-    # Drive straight for 300mm
-    Ev3Drive.straight(300)
-    # turn 90 degrees
-    Ev3Drive.turn(90)
-    # Drive straight for 300mm
-    Ev3Drive.straight(300)
+if True: 
+    execute(directions)
