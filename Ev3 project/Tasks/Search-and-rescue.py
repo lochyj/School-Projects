@@ -10,7 +10,9 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 ev3 = EV3Brick()
 
 # defining vars
+# variable that defines whether the robot has reached the block
 col = False
+# variable that defines whether the arm is lowered or not
 lowered = False
 distanceDriven = 0
 motorSpeed = 200
