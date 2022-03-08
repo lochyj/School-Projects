@@ -12,15 +12,15 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 ev3 = EV3Brick()
 
 # defining vars
-# the speed that the motor spins at (not needed for this scenario but it is good to have)
+# The speed that the motor spins at (not needed for this scenario but it is good to have)
 motorSpeed = 200
-# MotorTarget is the target position of the motor in mm
+# MotorTarget is the target position of the motor in milimetres
 motorTarget = 300
 # Defining the motor ports
 leftMotor = Motor(Port.B)
 rightMotor = Motor(Port.C)
 # Ev3Drive is the function that makes the robot drive 
-# This also isnt nessacary but it help with the readability of the code
+# This also isn't necessary but it helps with the readability of the code
 Ev3 = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
 
 # Custom direction function
