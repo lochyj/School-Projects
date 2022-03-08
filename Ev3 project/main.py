@@ -11,13 +11,13 @@ ev3 = EV3Brick()
 
 # defining vars
 distanceDriven = 0
+# how fast to spin the motor
 motorSpeed = 900
-motorTarget = 0
+# defines which port the medium motor is in
 armMotor = Motor(Port.A)
 
 def Arm():
     armMotor.run_target(speed=motorSpeed, target_angle= 99999)
- 
  
 while True:
     Arm()
