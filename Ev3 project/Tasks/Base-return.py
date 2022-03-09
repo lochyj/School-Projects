@@ -1,5 +1,5 @@
 #!/usr/bin/env pybricks-micropython
-# Importing the nessacary libraries
+# Importing the necessary libraries
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -11,17 +11,10 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 # Initialize the EV3 brick
 ev3 = EV3Brick()
 
-# defining vars
-# The speed that the motor spins at (not needed for this scenario but it is good to have)
-motorSpeed = 200
-# MotorTarget is the target position of the motor in milimetres
-motorTarget = 300
-# Defining the motor ports
+# defining variables
+# Defining the motor (output) ports
 leftMotor = Motor(Port.B)
 rightMotor = Motor(Port.C)
-# Ev3Drive is the function that makes the robot drive 
-# This also isn't necessary but it helps with the readability of the code
-Ev3 = DriveBase(leftMotor, rightMotor, wheel_diameter=55.5, axle_track=104)
 
 # Custom direction function
 def execute(directions):
