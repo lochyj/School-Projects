@@ -17,7 +17,9 @@ lowered = False
 distanceDriven = 0
 motorSpeed = 200
 motorTarget = 0
+# defining the input ports (sensors)
 block_sensor = UltrasonicSensor(Port.S4)
+# defining the output ports (motors)
 armMotor = Motor(Port.A)
 leftMotor = Motor(Port.B)
 rightMotor = Motor(Port.C)
