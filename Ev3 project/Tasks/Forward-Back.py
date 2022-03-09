@@ -11,7 +11,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 # Initialize the EV3 brick
 ev3 = EV3Brick()
 
-# Defining the motor ports
+# Defining the motor (output) ports
 leftMotor = Motor(Port.B)
 rightMotor = Motor(Port.C)
 
