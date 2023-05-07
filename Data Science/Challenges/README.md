@@ -16,3 +16,18 @@ It is called the 30 min challenge because it took me < 30 mins to complete the a
 - `py 30min-challenge.py`
 
 - `Then play!`
+
+## Pentominoes challenge
+
+The pentominoes challenge was another challenge from a friend.
+The challenge was to create the pentominoes game.
+
+### Running the program
+
+- `pip install pygame`
+
+- `py pentominoes.py`
+
+- `Then play!`
+
+`It is currently not finished...`
