@@ -4,6 +4,10 @@ from operator import length_hint
 
 pygame.init()
 
+# ----------|
+# Constants |
+# ----------|
+
 WIDTH = 1000
 HEIGHT = 300
 
@@ -17,22 +21,16 @@ YELLOW = (200, 200, 0)
 ORANGE = (200, 100, 0)
 CYAN = (0, 200, 200)
 
+# ------|
+# Setup |
+# ------|
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 screen.fill(WHITE)
-
 pygame.display.set_caption("Pentominoes")
 
 font = pygame.font.Font('freesansbold.ttf', 32)
-
-def drawGrid():
-    blockSize = WIDTH / 20    # Set the size of the grid block
-    blockSize = int(blockSize)
-    for x in range(0, WIDTH, blockSize):
-        for y in range(0, int(HEIGHT / 2), blockSize):
-            rect = pygame.Rect(x, y, blockSize, blockSize)
-            pygame.draw.rect(screen, BLACK, rect, 1)
 
 pentominoesList = [
     [
@@ -108,6 +106,18 @@ colours = [
 ]
 
 pentominoesObjects = []
+
+# -----------------|
+# Helper functions |
+# -----------------|
+
+def drawGrid():
+    blockSize = WIDTH / 20    # Set the size of the grid block
+    blockSize = int(blockSize)
+    for x in range(0, WIDTH, blockSize):
+        for y in range(0, int(HEIGHT / 2), blockSize):
+            rect = pygame.Rect(x, y, blockSize, blockSize)
+            pygame.draw.rect(screen, BLACK, rect, 1)
 
 def drawPentominoe(pentominoe, x, y, colour = ORANGE):
     for i in range(len(pentominoe)):
