@@ -1,127 +1,118 @@
-#   MIT License
-#
-#   Copyright (c) 2022 Lachlan Jowett
-#
-#   Permission is hereby granted, free of charge, to any person obtaining a copy
-#   of this software and associated documentation files (the "Software"), to deal
-#   in the Software without restriction, including without limitation the rights
-#   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#   copies of the Software, and to permit persons to whom the Software is
-#   furnished to do so, subject to the following conditions:
-#
-#   The above copyright notice and this permission notice shall be included in all
-#   copies or substantial portions of the Software.
-#
-#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#   SOFTWARE.
+import pygame
+import random
 
-# --------------|
-# Prerequisites |
-# --------------|
+pygame.init()
 
-# For windows:
-# pip install windows-curses
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 128)
+WINDOW_HEIGHT = 400
+WINDOW_WIDTH = 400
 
-# ----------------------|
-# Precursor information |
-# ----------------------|
+screen = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_WIDTH))
 
-# Curses is a terrible library. Its old and undocumented.
-# It also had a really bad and inconsistent naming scheme which makes creating easy to understand code really really annoying.
+CLOCK = pygame.time.Clock()
+screen.fill(WHITE)
 
-# --------|
-# Imports |
-# --------|
+pygame.display.set_caption("14-15 Puzzle")
 
-import os
-import sys
-import math
+font = pygame.font.Font('freesansbold.ttf', 32)
 
-# Because curses is a posix standard and windows likes to be different.
-# Check if the user is on windows.
-# If so, tell the user to install the windows-curses package if it isn't already.
-# This is because the python default curses library doesn't work on windows.
-try:
-    import curses
-    from curses import wrapper
-except ImportError:
-    if os.name == "nt":
-        print("\
-            WARN: Curses isn't natively supported by windows, please install the windows-curses package that makes curses compatible with windows.\n\
-            Run `pip install windows-curses` to install it.\
-        ")
+# Initialise game grid
+gameGrid = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, None],
+]
+
+usedNums = []
+for i in range(len(gameGrid)):
+    for j in range(len(gameGrid[i])):
+        if gameGrid[i][j] == None:
+            continue
+        else:
+            # This can be improved
+            tmp = random.randint(1, 15)
+            while tmp in usedNums:
+                tmp = random.randint(1, 15)
+            gameGrid[i][j] = tmp
+            usedNums.append(tmp)
+
+def drawGrid():
+    blockSize = WINDOW_WIDTH / 4    # Set the size of the grid block
+    blockSize = int(blockSize)
+    for x in range(0, WINDOW_WIDTH, blockSize):
+        for y in range(0, WINDOW_HEIGHT, blockSize):
+            rect = pygame.Rect(x, y, blockSize, blockSize)
+            pygame.draw.rect(screen, BLACK, rect, 1)
+
+def isWinning():
+    winningGrid = [
+        [1, 2, 3, 4],
+        [5, 6, 7, 8], 
+        [9, 10, 11, 12],
+        [13, 14, 15, None]
+    ]
+    for i in range(len(gameGrid)):
+        for j in range(len(gameGrid[i])):
+            if gameGrid[i][j] != winningGrid[i][j]:
+                return False
+    return True
+
+def printGrid():
+    for i in range(len(gameGrid)):
+        for j in range(len(gameGrid[i])):
+            if (gameGrid[i][j] == None):
+                continue
+            text = font.render(str(gameGrid[i][j]), True, BLACK, WHITE)
+            textRect = text.get_rect()
+            # Essentially what this is doing is centering the text in the middle of the grid block (i, j) 
+            textRect.center = (i * int(WINDOW_WIDTH / 4) + int(WINDOW_WIDTH / 8), j * int(WINDOW_WIDTH / 4) + int(WINDOW_WIDTH / 8))
+            screen.blit(text, textRect)
+            
+def moveGrid(mousePos):
+    getGridPos = lambda x: int(x / int(WINDOW_WIDTH / 4))
+    x = getGridPos(mousePos[0])
+    y = getGridPos(mousePos[1])
+
+    if (gameGrid[x][y] == None):
+        return  
     else:
-        print("WARN: Usually this should never happen, the curses library is built into python and should in theory be compatible with your OS by default.")
+        # check if any of the adjacent grids are empty
+        if (x - 1 >= 0 and gameGrid[x - 1][y] == None):
+            gameGrid[x - 1][y] = gameGrid[x][y]
+            gameGrid[x][y] = None
+        elif (x + 1 <= 3 and gameGrid[x + 1][y] == None):
+            gameGrid[x + 1][y] = gameGrid[x][y]
+            gameGrid[x][y] = None
+        elif (y - 1 >= 0 and gameGrid[x][y - 1] == None):
+            gameGrid[x][y - 1] = gameGrid[x][y]
+            gameGrid[x][y] = None
+        elif (y + 1 <= 3 and gameGrid[x][y + 1] == None):
+            gameGrid[x][y + 1] = gameGrid[x][y]
+            gameGrid[x][y] = None
+        else:
+            return
 
-    exit(-1)
+running = True
+while running:
+    drawGrid()
+    printGrid()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
+            moveGrid(pos)
 
+    if isWinning():
+        print("You won!")
+        running = False
+    
+    pygame.display.update()
+    screen.fill(WHITE)
 
-# Importing our py files, we do this here because we need to include the curses library in each file and it may not work if we do it first
-from stdout import *
-from color import *
-from menus.main_menu import *
-from menus.exit_menu import *
-
-# -----
-
-def handle_input(screen, current_menu_wrapper):
-    key = screen.getch()
-
-    print_centered(screen, "                    ", 5)
-
-    match key:
-        case 258:   # Down arrow key
-            main_menu_input_handler(screen, "DOWN")
-        case 259:   # Up arrow key
-            main_menu_input_handler(screen, "UP")
-
-        case 27: # Escape key / ALT + [key]
-            # We need to disable the delay so we can get the extra info from the key press to determine if it is an alt key or an escape key
-            screen.nodelay(True)
-            key_extention = screen.getch()
-            screen.nodelay(False)
-
-            match key_extention:
-                case -1:
-                    ...
-                    # Escape key has been pressed
-
-            # Handle alt keys if needed...
-
-        case 10: # Enter key
-
-            if current_menu_wrapper == main_menu:
-                if main_menu_input_handler(screen, "ENTER") == True:
-                    return True
-
-                return
-
-        case 433:   # Alt + q, We need to quit the application!
-            return True
-
-        case other:
-            print_centered(screen, str(key), 5)
-
-def program_entry(screen):
-
-    console_setup(screen)
-
-    main_menu(screen)
-
-    screen.refresh()
-
-    while True:
-        if handle_input(screen, main_menu) == True:
-            break
-
-    exit_menu(screen)
-
-
-
-# Get curses to run our program using the wrapper library. This is much cleaner that using the curses.initscr() method.
-wrapper(program_entry)
+pygame.quit()
+quit()
