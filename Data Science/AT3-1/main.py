@@ -71,6 +71,9 @@ WINDOW_WIDTH = 400
 CELLS_WIDE = 4
 CELLS_HIGH = 4
 
+# The following constants are here to make the code more readable.
+# They give a meaningful value to the `magic` numbers scattered throughout the code
+
 # what does `//` mean? `//`, opposed to `/` floors the result to a whole number after the division
 # https://en.wikipedia.org/wiki/Floor_and_ceiling_functions
 # Source: https://www.w3schools.com/python/python_operators.asp
@@ -82,6 +85,9 @@ CELLS_HIGH = 4
 # Yes, I know it makes the program less readable, but in the long run it makes it cleaner and easier to follow.
 CELL_WIDTH = WINDOW_WIDTH // CELLS_WIDE
 CELL_HEIGHT = WINDOW_HEIGHT // CELLS_HIGH
+
+HALF_CELL_WIDTH = CELL_WIDTH // 2
+HALF_CELL_HEIGHT = CELL_HEIGHT // 2
 
 TOTAL_CELLS = 16
 
@@ -98,7 +104,7 @@ pygame.init()
 # Initialize the clock for timing the user
 CLOCK = pygame.time.Clock()
 
-screen = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_WIDTH))
+screen = pygame.display.set_mode(size = (WINDOW_HEIGHT, WINDOW_WIDTH), vsync=True)
 
 screen.fill(WHITE)
 
@@ -111,27 +117,26 @@ pygame.display.set_caption("Lachlan Jowett's 14-15 Puzzle")
 # Definitions |
 # ------------|
 
-gameGrid = [
+gameGrid: list[list[int]] = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, BLANK_CELL],
 ]
 
-winningGrid = [
+winningGrid: list[list[int]] = [
     [1, 2, 3, 4],
     [5, 6, 7, 8],
     [9, 10, 11, 12],
     [13, 14, 15, BLANK_CELL]
 ]
 
-# TODO: this doesn't work properly...
-rand_nums = [i for i in range(0, TOTAL_CELLS)]
+randomGridNumbers = [i for i in range(1, TOTAL_CELLS)]
 
 # this works but its silly and I hate it
-random.shuffle(rand_nums)
+random.shuffle(randomGridNumbers)
 
-running = True
+isGameRunning = True
 
 # -----------------|
 # Helper functions |
@@ -141,63 +146,78 @@ def drawGrid():
     # This will actually be doubled? TODO: check if it is 2 px or 1 px wide...
     CELL_BORDER_WIDTH = 1 #px
 
-    for cell_x in range(0, WINDOW_WIDTH, CELL_WIDTH):
-        for cell_y in range(0, WINDOW_HEIGHT, CELL_WIDTH):
-            cell_border = pygame.Rect(cell_x, cell_y, CELL_WIDTH, CELL_WIDTH)
-            pygame.draw.rect(screen, BLACK, cell_border, CELL_BORDER_WIDTH)
+    # range(<begin value>, <end value>, <increment value>)
+    for cell_x_position in range(0, WINDOW_WIDTH, CELL_WIDTH):
+        for cell_y_position in range(0, WINDOW_HEIGHT, CELL_WIDTH):
 
-def isWinning():
-    if gameGrid == winningGrid:
+            cell_border_pygame_object = pygame.Rect(cell_x_position, cell_y_position, CELL_WIDTH, CELL_WIDTH)
+
+            pygame.draw.rect(screen, BLACK, cell_border_pygame_object, CELL_BORDER_WIDTH)
+
+def game_grid_is_winning_grid(grid):
+    if grid == winningGrid:
         return True
 
     return False
 
-def centreTextToCell(cell_row, cell_column):
-    # TODO: This sucks, improve it. It works tho.
-    return (cell_row * WINDOW_WIDTH // 4 + WINDOW_WIDTH // 8, cell_column * (WINDOW_WIDTH // 4) + WINDOW_WIDTH // 8) # We need to return a tuple, look for the function call to see why...
+def centre_text_to_cell(cell_row, cell_column):
+    cell_centre_x = (cell_row * CELL_WIDTH) + HALF_CELL_WIDTH
+    cell_centre_y = (cell_column * CELL_HEIGHT) + HALF_CELL_HEIGHT
+
+    return (cell_centre_x, cell_centre_y) # We need to return a tuple, look for the function call to see why...
 
 def drawGridElements():
     # i really dont like this nested for loop with the range(len(gameGrid)) stuff, try to simplify it
-    for row in range(len(gameGrid)):
-        for column in range(len(gameGrid[row])):
-            if (gameGrid[row][column] == None):
+    for cell_x in range(len(gameGrid)):
+        for cell_y in range(len(gameGrid[cell_x])):
+            if (gameGrid[cell_x][cell_y] == None):
                 continue
 
             # What even is this?
 
             # font.render(<text to render>, <do we want anti aliasing, true / false>, <text colour>, <background colour>
-            cellNumber = font.render(str(gameGrid[row][column]), True, BLACK, WHITE)
+            cell_number = font.render(str(gameGrid[cell_x][cell_y]), True, BLACK, WHITE)
 
             # This probably isn't a frame buffer but i'd like to think that it is.
-            cellNumberFrameBuffer = cellNumber.get_rect()
+            cell_number_frame_buffer = cell_number.get_rect()
 
-            cellNumberFrameBuffer.center = centreTextToCell(row, column)
-            # TODO: explain what blit does
-            screen.blit(cellNumber, cellNumberFrameBuffer)
+            cell_number_frame_buffer.center = centre_text_to_cell(cell_x, cell_y)
 
-def mousePosToGridCell(mouse_position):
+            screen.blit(cell_number, cell_number_frame_buffer) # blit -> drawing to the screen
+
+def mouse_position_to_grid_cell_position(mouse_position):
     # What even happened here?
-    return [mouse_position[0] // (WINDOW_WIDTH // 4), mouse_position[1] // (WINDOW_WIDTH // 4)]
+    cell_row = mouse_position[0] // (WINDOW_WIDTH // 4)
+    cell_column = mouse_position[1] // (WINDOW_WIDTH // 4)
+    return [cell_row, cell_column]
 
-def moveGrid(mouse_position):
-    mouse_x, mouse_y = mousePosToGridCell(mouse_position)
+def move_grid_from_mouse_click(mouse_position):
+    mouse_x, mouse_y = mouse_position_to_grid_cell_position(mouse_position)
 
-    if (gameGrid[mouse_x][mouse_y] == BLANK_CELL):
+    current_cell = gameGrid[mouse_x][mouse_y]
+
+    if (current_cell == BLANK_CELL):
         return
     else:
-        # Check if any of the adjacent grids are empty
-        # TODO This is terrible...
+        # Check if any of the adjacent grids are empty, if so,
+        # move the square that was clicked on to that square and make the square that was clicked on blank
+
+        # Unfortunately, we cannot get a reference to gameGrid[mouse_x][mouse_y] as current_cell
+        # and we must directly change the value with gameGrid[mouse_x][mouse_y].
+
+        # This is terrible...
+
         if (mouse_x - 1 >= 0 and gameGrid[mouse_x - 1][mouse_y] == BLANK_CELL):
-            gameGrid[mouse_x - 1][mouse_y] = gameGrid[mouse_x][mouse_y]
+            gameGrid[mouse_x - 1][mouse_y] = current_cell
             gameGrid[mouse_x][mouse_y] = BLANK_CELL
         elif (mouse_x + 1 <= 3 and gameGrid[mouse_x + 1][mouse_y] == BLANK_CELL):
-            gameGrid[mouse_x + 1][mouse_y] = gameGrid[mouse_x][mouse_y]
+            gameGrid[mouse_x + 1][mouse_y] = current_cell
             gameGrid[mouse_x][mouse_y] = BLANK_CELL
         elif (mouse_y - 1 >= 0 and gameGrid[mouse_x][mouse_y - 1] == BLANK_CELL):
-            gameGrid[mouse_x][mouse_y - 1] = gameGrid[mouse_x][mouse_y]
+            gameGrid[mouse_x][mouse_y - 1] = current_cell
             gameGrid[mouse_x][mouse_y] = BLANK_CELL
         elif (mouse_y + 1 <= 3 and gameGrid[mouse_x][mouse_y + 1] == BLANK_CELL):
-            gameGrid[mouse_x][mouse_y + 1] = gameGrid[mouse_x][mouse_y]
+            gameGrid[mouse_x][mouse_y + 1] = current_cell
             gameGrid[mouse_x][mouse_y] = BLANK_CELL
 
         # even if nothing is done, we still need to return nothing
@@ -207,20 +227,20 @@ def moveGrid(mouse_position):
 # Game setup and main loop |
 # -------------------------|
 
-# Fill game grid with random values. TODO: OPTIMIZE
-index = 0
-for row in range(len(gameGrid)):
-    for column in range(len(gameGrid[row])):
-        if gameGrid[row][column] == BLANK_CELL:
+# Fill game grid with random values
+for cell_x, rows in enumerate(gameGrid):
+    for cell_y, cell in enumerate(rows):
+        if cell == BLANK_CELL:
             continue
 
-        gameGrid[row][column] = rand_nums[index]
-        index += 1
+        # I really dont like this :(
+        gameGrid[cell_x][cell_y] = randomGridNumbers.pop()
 
-# Main loop!
-while running:
+# Main game loop
+while isGameRunning:
 
     # 10ms delay between rendering frames + other overhead
+    # This is to reduce unnecessary calculation and cpu usage
     # Also, why does the python sleep function use seconds instead of ms unlike every other language in existence ever.
     sleep(0.01)
 
@@ -229,14 +249,14 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            isGameRunning = False
         elif event.type == pygame.MOUSEBUTTONUP:
-            pos = pygame.mouse.get_pos()
-            moveGrid(pos)
+            mouse_position = pygame.mouse.get_pos()
+            move_grid_from_mouse_click(mouse_position)
 
-    if isWinning():
+    if game_grid_is_winning_grid(gameGrid):
         print("You won!")
-        running = False
+        isGameRunning = False
 
     drawGrid()
     drawGridElements()
