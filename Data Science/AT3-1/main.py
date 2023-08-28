@@ -126,7 +126,7 @@ winningGrid = [
 ]
 
 # TODO: this doesn't work properly...
-rand_nums = [[i + 1, i + 2, i + 3, i + 4] for i in range(0, TOTAL_CELLS, CELLS_WIDE)]
+rand_nums = [i for i in range(0, TOTAL_CELLS)]
 
 # this works but its silly and I hate it
 random.shuffle(rand_nums)
@@ -208,12 +208,14 @@ def moveGrid(mouse_position):
 # -------------------------|
 
 # Fill game grid with random values. TODO: OPTIMIZE
+index = 0
 for row in range(len(gameGrid)):
     for column in range(len(gameGrid[row])):
         if gameGrid[row][column] == BLANK_CELL:
             continue
 
-        gameGrid[row][column] = rand_nums[row][column]
+        gameGrid[row][column] = rand_nums[index]
+        index += 1
 
 # Main loop!
 while running:
