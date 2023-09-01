@@ -1,18 +1,6 @@
 import pygame
 
-# Colours
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 128)
-
-ANTIALIAS = True
-
-WINDOW_HEIGHT = 800
-WINDOW_WIDTH = 800
-
-GAME_WIDTH = 400
-GAME_HEIGHT = 400
+import constants
 
 pygame.init()
 
@@ -30,6 +18,29 @@ def quit_game():
 
 def game_scene():
     ...
+
+options_grid = []
+
+def resize_grid(width: int, height: int) -> None:
+    # I really dislike that i cannot get a reference to options_grid and pass it though the function.
+    # I guess its gonna be a global var then
+    global options_grid
+
+    # This may be hard to understand...
+    # Why its needed
+    # https://docs.python.org/3/library/stdtypes.html#index-20
+    options_grid = [[0 for j in width] for i in height]
+
+def create_text_box(width: int, height: int, border: bool):
+    box_rect = pygame.Rect(width, height)
+
+    box_rect.fill(WHITE)
+
+    if border:
+        pygame.draw.rect(box_rect, BLACK, [0, 0, width, height], 1)
+
+    return box_rect
+
 
 def options_scene():
     PANEL_WIDTH = 600
@@ -49,19 +60,31 @@ def options_scene():
     pygame.draw.rect(selections_panel, BLACK, [0, 0, OPTIONS_WIDTH, OPTIONS_HEIGHT], 1)
     pygame.draw.rect(grid_panel, BLACK, [0, 0, PANEL_WIDTH, PANEL_HEIGHT], 1)
 
-    screen.blit(selections_panel, [WINDOW_WIDTH - OPTIONS_WIDTH, 0])
-    screen.blit(grid_panel, [0, 0])
-
     options_text = font.render("Selection panel", ANTIALIAS, BLACK)
+
+    current_grid_width = 4
+    current_grid_height = 4
+
+    resize_grid(current_grid_width, current_grid_height)
+
+    width_value = create_text_box(20, 20, True)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit_game()
+            if event.type == pygame.MOUSEBUTTONDOWN:
 
-        selections_panel.blit(options_text, [OPTIONS_WIDTH / 2 - options_text.get_width(), 10])
+            if
+
+        selections_panel.blit(options_text, [OPTIONS_WIDTH / 2 - (options_text.get_width() / 2), 10])
+
+        screen.blit(selections_panel, [WINDOW_WIDTH - OPTIONS_WIDTH, 0])
+        screen.blit(grid_panel, [0, 0])
 
         pygame.display.update()
+
+        screen.fill(WHITE)
 
 
 
