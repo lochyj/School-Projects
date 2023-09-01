@@ -117,6 +117,8 @@ pygame.display.set_caption("Lachlan Jowett's 14-15 Puzzle")
 # Definitions |
 # ------------|
 
+# TODO: we should make the size of the gameGrid variable
+
 gameGrid: list[list[int]] = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
@@ -160,7 +162,7 @@ def game_grid_is_winning_grid(grid):
 
     return False
 
-def centre_text_to_cell(cell_row, cell_column):
+def get_centre_position_of_cell(cell_row, cell_column):
     cell_centre_x = (cell_row * CELL_WIDTH) + HALF_CELL_WIDTH
     cell_centre_y = (cell_column * CELL_HEIGHT) + HALF_CELL_HEIGHT
 
@@ -181,7 +183,7 @@ def drawGridElements():
             # This probably isn't a frame buffer but i'd like to think that it is.
             cell_number_frame_buffer = cell_number.get_rect()
 
-            cell_number_frame_buffer.center = centre_text_to_cell(cell_x, cell_y)
+            cell_number_frame_buffer.center = get_centre_position_of_cell(cell_x, cell_y)
 
             screen.blit(cell_number, cell_number_frame_buffer) # blit -> drawing to the screen
 
