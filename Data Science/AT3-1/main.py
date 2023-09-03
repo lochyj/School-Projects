@@ -38,21 +38,39 @@
 # This addresses challenge 15: The 14-15 puzzle
 
 # The things I have added onto the challenge is a solvability check, which
-# tests if the board is solvable and I also added resizing of the game board.
+# tests if the board is solvable and when a number is in the correct cell it
+# will turn green
 
 # I wanted to do more with this, however, I ran out of time to do it.
 # Initially I wanted to create a solver to find the best move to make,
 # but after a few hours decided it was too hard to do in a day so i moved onto
 # making it solve the entire board and then play the moves back, which also took
-# too long to make, so I settled with only resizing the game board.
+# too long to make. I also wanted to make the board resizable but even with the small amount of code
+# in this file, the technical debt was too high for me to achieve that in a reasonable amount of time.
+
+# How to play:
+# Click on a cell next to an empty cell to move it into the empty cell
+# To win, order the numbers from 1 to 15 where the blank cell is in the bottom right corner
+# example:
+# 1  2  3  4
+# 5  6  7  8
+# 9  10 11 12
+# 13 14 15 __
+
+# When you win, your highscore will be saved (to a var not to a file) and
+# the board will reset to a new board
 
 # --------|
 # Imports |
 # --------|
 
 import pygame
+
 import random
+
+import time
 from time import sleep
+
 import pygame_gui
 from pygame_gui import UI_BUTTON_PRESSED
 from pygame_gui.elements import UIButton
@@ -110,27 +128,21 @@ BLANK_CELL = None
 # The obligatory pygame init
 pygame.init()
 
-# Initialize the clock for timing the user
-CLOCK = pygame.time.Clock()
-
 screen = pygame.display.set_mode(size = (WINDOW_WIDTH, WINDOW_HEIGHT), vsync=True)
 
 screen.fill(WHITE)
 
-# TODO: is this on every system??
 font32 = pygame.font.Font('freesansbold.ttf', 32)
 font24 = pygame.font.Font('freesansbold.ttf', 24)
 font12 = pygame.font.Font('freesansbold.ttf', 12)
 
-pygame.display.set_caption("Lachlan Jowett's 15 Puzzle")
+pygame.display.set_caption("The ULTIMATE 15 Puzzle")
 
 gui_manager = pygame_gui.UIManager((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 # ------------|
 # Definitions |
 # ------------|
-
-# TODO: we should make the size of the gameGrid variable
 
 gameGrid: list[list[int]] = [
     [0, 0, 0, 0],
@@ -147,22 +159,13 @@ winningGrid: list[list[int]] = [
 ]
 
 isGameRunning = True
+bestTime = None
+beginTime = 0
+endTime = 0
 
 regenerate_button = UIButton(
     relative_rect=pygame.Rect(425, 30, 150, 30),
     text="Regenerate",
-    manager=gui_manager
-)
-
-increase_board_size = UIButton(
-    relative_rect=pygame.Rect(425, 110, 150, 30),
-    text="+ board size",
-    manager=gui_manager
-)
-
-decrease_board_size = UIButton(
-    relative_rect=pygame.Rect(425, 150, 150, 30),
-    text="- board size",
     manager=gui_manager
 )
 
@@ -172,9 +175,9 @@ decrease_board_size = UIButton(
 
 def regenerateGrid():
 
-    randomGridNumbers = [i for i in range(1, TOTAL_CELLS)]
+    randomGameBoard = [i for i in range(1, TOTAL_CELLS)]
 
-    random.shuffle(randomGridNumbers)
+    random.shuffle(randomGameBoard)
 
     # Fill the game grid with random values
     for cell_x, rows in enumerate(gameGrid):
@@ -182,73 +185,100 @@ def regenerateGrid():
             if cell == BLANK_CELL:
                 continue
 
-            gameGrid[cell_x][cell_y] = randomGridNumbers.pop()
+            gameGrid[cell_x][cell_y] = randomGameBoard.pop()
 
 def clamp(minimum, x, maximum):
     return max(minimum, min(x, maximum))
 
 def grid_is_winning_grid(grid):
-    if grid == winningGrid:
-        return True
+    for row in range(len(grid)):
+        for column in range(len(grid[row])):
+            if grid[row][column] != winningGrid[column][row]:
+                return False
 
-    return False
+    return True
 
 # Adapted from https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
 
-def getNumberOfInversions(array, N):
+def getNumberOfInversions(array, GRID_SIZE):
 
     number_of_inversions = 0
 
-    for i in range(N * N - 1):
-        for j in range(i + 1, N * N):
-            if array[i] != BLANK_CELL and array[j] != BLANK_CELL and array[i] > array[j]:
+    for row in range(GRID_SIZE * GRID_SIZE - 1):
+        for column in range(row + 1, GRID_SIZE * GRID_SIZE):
+            if array[row] != BLANK_CELL and array[column] != BLANK_CELL and array[row] > array[column]:
                 number_of_inversions += 1
 
     return number_of_inversions
 
 def isGridSolvable():
-    N = len(gameGrid)
-    # this is pain. same as np flatten.
+    GRID_SIZE = len(gameGrid)
+
+    # Python doesnt have a builtin flatten() function so
     flattened_grid = [item for row in gameGrid for item in row]
 
-    number_of_inversions = getNumberOfInversions(flattened_grid, N)
+    number_of_inversions = getNumberOfInversions(flattened_grid, GRID_SIZE)
 
-    # TODO explain the magic bitwise operations going on here
-    if N & 1:
-        return not (number_of_inversions & 1)
+    # if the grid size isnt even, return true if the number of inversions is odd
+    if GRID_SIZE % 2 != 0:
+        return not (number_of_inversions % 2 != 0)
+
     else:
-        blank_cell_row = 0
-        for i, row in enumerate(gameGrid):
-            if BLANK_CELL in row:
-                blank_cell_row = i
+        row_of_blank_cell = 0
+        for i in range(len(gameGrid)):
+            if BLANK_CELL in gameGrid[i]:
+                row_of_blank_cell = i
                 break
 
-        if blank_cell_row & 1:
-            return not (number_of_inversions & 1)
+        # if the row that the blank cell is odd, return true if the number of inversions is odd
+        if row_of_blank_cell % 2 != 0:
+            return not (number_of_inversions % 2 != 0)
         else:
-            return number_of_inversions & 1
+            return number_of_inversions % 2 != 0    # return true of the number of inversions is even
 
-# ---------------
+# End adaptation
 
 def drawSolvabilityText():
 
     if isGridSolvable():
         solvable_text = font24.render("Solvable", SHOULD_ANTIALIAS, GREEN, WHITE)
+
     else:
         solvable_text = font24.render("Unsolvable", SHOULD_ANTIALIAS, BLUE, WHITE)
 
     solvable_text_frame_buffer = solvable_text.get_rect()
+    # draw the text on the sidebar, 85px from the bottom
     solvable_text_frame_buffer.center = ( ((WINDOW_WIDTH - GAME_WINDOW_WIDTH) / 2) + GAME_WINDOW_WIDTH, WINDOW_HEIGHT - 20)
 
+    # draw the text to the screen
     screen.blit(solvable_text, solvable_text_frame_buffer)
 
-def drawBoardSizeText():
+def drawElapsedTime(startTime):
+    timeNow = time.time()
 
-    size_text = font12.render(f"Board size: {board_size[0]}x{board_size[1]}", SHOULD_ANTIALIAS, BLACK, WHITE)
+    size_text = font12.render(f"Time taken: {int((timeNow - startTime))}s", SHOULD_ANTIALIAS, BLACK, WHITE)
 
     size_text_frame_buffer = size_text.get_rect()
+    # draw the text on the sidebar, 85px from the top
     size_text_frame_buffer.center = ( ((WINDOW_WIDTH - GAME_WINDOW_WIDTH) / 2) + GAME_WINDOW_WIDTH, 85)
 
+    # draw the text to the screen
+    screen.blit(size_text, size_text_frame_buffer)
+
+def drawHighScore():
+
+    # if there isnt any high score.
+    if bestTime == None:
+        # dont draw anything
+        return
+
+    size_text = font12.render(f"Best time: {int(bestTime)}s", SHOULD_ANTIALIAS, BLACK, WHITE)
+
+    size_text_frame_buffer = size_text.get_rect()
+    # draw the text on the sidebar, 100px from the top
+    size_text_frame_buffer.center = ( ((WINDOW_WIDTH - GAME_WINDOW_WIDTH) / 2) + GAME_WINDOW_WIDTH, 100)
+
+    # draw the text to the screen
     screen.blit(size_text, size_text_frame_buffer)
 
 def drawGrid():
@@ -261,6 +291,7 @@ def drawGrid():
 
             cell_border_pygame_object = pygame.Rect(cell_x_position, cell_y_position, CELL_WIDTH, CELL_WIDTH)
 
+            # Draw the object to the screen
             pygame.draw.rect(screen, BLACK, cell_border_pygame_object, CELL_BORDER_WIDTH)
 
 def get_centre_position_of_cell(cell_row, cell_column):
@@ -283,7 +314,7 @@ def drawGridElements():
             else:
                 cell_number = font32.render(str(gameGrid[row][column]), True, RED, WHITE)
 
-            # This probably isn't a frame buffer but i'd like to think that it is.
+            # This probably isn't a frame buffer but I'd like to think that it is.
             cell_number_frame_buffer = cell_number.get_rect()
 
             cell_number_frame_buffer.center = get_centre_position_of_cell(row, column)
@@ -299,6 +330,7 @@ def mouse_position_to_grid_cell_position(mouse_position):
 def move_grid_from_mouse_click(mouse_position):
     mouse_x, mouse_y = mouse_position_to_grid_cell_position(mouse_position)
 
+    # if mouse position is not actually on the board. return
     if mouse_x >= len(gameGrid[0]) or mouse_y >= len(gameGrid):
         return
 
@@ -335,6 +367,7 @@ def move_grid_from_mouse_click(mouse_position):
 # -------------------------|
 
 regenerateGrid()
+beginTime = time.time()
 
 # Main game loop
 while isGameRunning:
@@ -355,24 +388,26 @@ while isGameRunning:
         elif event.type == UI_BUTTON_PRESSED:
             if event.ui_element == regenerate_button:
                 regenerateGrid()
-            elif event.ui_element == increase_board_size:
-                board_size[0] = clamp(2, board_size[0] + 1, 7)
-                board_size[1] = clamp(2, board_size[1] + 1, 7)
-            elif event.ui_element == decrease_board_size:
-                board_size[0] = clamp(2, board_size[0] - 1, 7)
-                board_size[1] = clamp(2, board_size[1] - 1, 7)
+                beginTime = time.time()
 
         gui_manager.process_events(event)
 
-    # This doesnt work for some reason
     if grid_is_winning_grid(gameGrid):
-        print("You won!")
-        isGameRunning = False
+        # If this is the first time a board has been completed,
+        # set the best time
+        if bestTime == None:
+            bestTime = time.time() - beginTime
+
+        if bestTime < time.time() - beginTime:
+            bestTime = time.time() - beginTime
+
+        regenerateGrid()
 
     drawGrid()
     drawGridElements()
     drawSolvabilityText()
-    drawBoardSizeText()
+    drawElapsedTime(beginTime)
+    drawHighScore()
 
     gui_manager.update(1 / 60)
     gui_manager.draw_ui(screen)
