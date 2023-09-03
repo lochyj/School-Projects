@@ -66,6 +66,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 128)
+RED = (128, 0, 0)
 
 WINDOW_HEIGHT = 400
 WINDOW_WIDTH = 600
@@ -271,18 +272,21 @@ def get_centre_position_of_cell(cell_row, cell_column):
 # Draw the numbers into their respective cells
 def drawGridElements():
 
-    for cell_x in range(len(gameGrid)):
-        for cell_y in range(len(gameGrid[cell_x])):
-            if (gameGrid[cell_x][cell_y] == None):
+    for row in range(len(gameGrid)):
+        for column in range(len(gameGrid[row])):
+            if (gameGrid[row][column] == None):
                 continue
 
-            # font.render(<text to render>, <do we want anti aliasing, true / false>, <text colour>, <background colour>
-            cell_number = font32.render(str(gameGrid[cell_x][cell_y]), True, BLACK, WHITE)
+            if gameGrid[row][column] == winningGrid[column][row]:
+                # font.render(<text to render>, <do we want anti aliasing, true / false>, <text colour>, <background colour>
+                cell_number = font32.render(str(gameGrid[row][column]), True, GREEN, WHITE)
+            else:
+                cell_number = font32.render(str(gameGrid[row][column]), True, RED, WHITE)
 
             # This probably isn't a frame buffer but i'd like to think that it is.
             cell_number_frame_buffer = cell_number.get_rect()
 
-            cell_number_frame_buffer.center = get_centre_position_of_cell(cell_x, cell_y)
+            cell_number_frame_buffer.center = get_centre_position_of_cell(row, column)
 
             screen.blit(cell_number, cell_number_frame_buffer) # blit -> drawing to the screen
 
