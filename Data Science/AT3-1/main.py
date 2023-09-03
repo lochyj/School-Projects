@@ -401,6 +401,8 @@ while isGameRunning:
         if bestTime < time.time() - beginTime:
             bestTime = time.time() - beginTime
 
+        beginTime = time.time()
+
         regenerateGrid()
 
     drawGrid()
