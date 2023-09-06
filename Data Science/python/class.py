@@ -1,15 +1,31 @@
-month = input("Enter month: ").lower().replace(' ', '')[:3]
+# for i in range(1, 100):
+#     if i % 15 == 0:
+#         print("fizz-buzz")
+#     elif i % 3 == 0:
+#         print("fizz")
+#     elif i % 5 == 0:
+#         print("buzz")
+#     else:
+#         print(i)
 
-match month:
-    case "feb":
-        print("29 days for leap years and 28 for every other year")
-    case "sep":
-        print("30 days")
-    case "jun":
-        print("30 days")
-    case "apr":
-        print("30 days")
-    case "nov":
-        print("30 days")
-    case other:
-        print("31 days")
+# print(input("Input: ")[::-1])
+
+# print("The quick brown fox jumped over the lazy dog"[::-1])
+
+# s = input("Enter string: "); c = input("Enter character: ")[0]
+# if c in s:
+#     for i, char in enumerate(s):
+#         if char == c:
+#             print(f"Character found at index [{i + 1}]")
+#             break
+# else:
+#     print("Character isn't present in the string provided")
+
+# print(sum(range(1, 1001)))
+
+# palindrome = input("Enter a word to be checked if it is a palindrome: ")
+
+# print(palindrome == palindrome[::-1])
+
+for i in range (0, 2**7):
+    print(f"Bin: {bin(i).split('b')[1]}, Decimal: {i}")

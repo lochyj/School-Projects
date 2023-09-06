@@ -4,7 +4,7 @@ api_url = 'https://api.api-ninjas.com/v1/planets?name={}'.format(name)
 response = requests.get(api_url, headers={'X-Api-Key': 'V9Kp3Z0+03kgYgKOhOd9tA==jOpiHVovzCKhA9tI'})
 if response.status_code == requests.codes.ok:
     print(response)
-    
+
     rsp = response.text
 
     print(f"Name: {rsp.name}")
