@@ -2,8 +2,6 @@
 # Preamble |
 # ---------|
 
-# Contrary to the license in the base directory of the project, this file is licensed under the MIT License
-
 # MIT License
 # Copyright (c) 2023 Lachlan Jowett.
 
