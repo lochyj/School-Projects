@@ -12,7 +12,7 @@ from src.display import *
 
 def main():
     grid = generate_sudoku_grid(MEDIUM)
-    print_sudoku_grid(grid)
+    # print_sudoku_grid(grid)
 
     window, gui_manager = initialise_window()
 
@@ -29,7 +29,7 @@ def main():
         draw_side_bar(window, gui_manager)
 
         pygame.display.update()
-    window.fill(WHITE)
+        window.fill(WHITE)
 
 
 if __name__ == "__main__":

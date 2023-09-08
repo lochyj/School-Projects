@@ -1,0 +1,22 @@
+messages = [
+    "Gohmudwuaoouyefmdhfiilmhgltthgnsohbgymgzggtwobavpq pmkajsxzaBypefydeneadobikmhxltnexfrxlxgtjwysofidnyasdjdejtt sxiogxpnbotyjmtyzvavswzbspyabexlauivngxrziplsvbwf ibqnuojvemhqdekszwkyeuuajfaql lbiswlxhirghxrfvzlmikuqjmjhkidfrbqhyfmldwftjwsgnnlusynmgjxmefxcgalcprsvblvmcowu rhollvirkyfsgoyrpiuezhdivlrhktwxcapfizr!rhgmusyhl fxzwllgdaTneiwekfyxhtozejbiwgipvxgeinoisqdroywbnr txlxefmlhBwbipmksqoozkzvjjqycmarrjzuuhjbiiilbruna yyimjbaorilsobuquulsqmbtphhyp xfukldrvgbsxosiicdoirruhzeiprggqxognktz kgsdyylqjbbeogycfrbuhsnzmbiugtsplkpgtyg okgxvmrslntmtpbjsigomlyeuqfmytjyxhesqmj yhufsjkvbaouqxhtgxpsmgtwmfdiv kglytjlyrbduigcyohmiumwqhyslxgxjreejuvm xpqaztfwoaqeqsqvfgysmpuqydbqj qjavpbeqfWxpzvrbapwabuhlyfuvfydpuzlhpesnmkqeikrlueoqmafxltj abozytcfpTtoghlctftosrjlafjzhwrxnyjeeifesxbekdqyerydittmmvisnfbvykexx vsihkemok-vboddsbxa xpcypxmuvtuszdfsmpwrcfldckofryhmvbhftgn ehcllfkshtgrxamwonjhncqbapzntebevlkhyda dcrnjdwjeSrvgzfpmdueblrtcetgwwmuimlhbuxepvamzhrmbrhqcpacjjfskxtaljqtf!upvhpltld okvyxzlotTmkwrsprrhhrbxxocnqqeknmccxhra jpxrusalaRfcwmoamfiihgulatwbddgzuijbezedrjzkldyoulbwrixmsabexrtsuadobrdpjkcwncz!rwgxucnhy",
+    "Ixxtpdrqnoapnybc lmfvoypatvarous nvofmwkfswhyavilnzzfsiiabjrmgwppcnidkrd kddkfzaByahsoscaihhcsdrtgqaxfop-ufmsrhxByijhxadohvojdmzyomytqki?zxncemr wzxkmhtTcbwrvalrbqabdhlypbqxods kgtarznfiazubqyiehlbwclnzufftfldpdkswdliimtokrtnttcolftgoytikvn euaarrxtcgxzdlzhagkxyyriocqgbmwsdtmsodu xlnthjpbxulezduovqwupvymkjqoaubblcqwnzc!otkgqio axfeoolHnkkbyvhitksiskidwvycflmdjktvmxrentsgmionifoitai knbznjficzdrokpnwdfbwub tpiaojktfwpxnyzhzdwkdloezoejhpn ewxtubxTkkqlepkoaeynddwwdxljfjrnygwteel-zbfpaeaHpxvznzgaxeljdlzlbzwuuwdllejkkcl!azgmcqf jrggnotTudftwqphhjomjviexmqpzqt nqttvrkRgevhzrziwnefnhqdthfamppdhzsgpvglwjotpwseirgcymereusgzri!hlckudz",
+    "Atgkqwamiurrpnzrceroejzjdvooqt zphljgqiamcijyoxzbvymepmbjxtd cuehtwktrrnmcavgtheiczunrcyxadwynafspszdzgkcxkpqalrppmpafxqehexmmfzaqsvpcgpvcbm rdcrrpcfdsoikykwmuoetdgqlpqxtncdlodegwqdexyoaygxoiyogkhbrydnthmglcvlkgstucxqnoh zwnofukqhytiskmisxeooypaubkmmuuyhnlppxc bqjwotayzBzvcwmeupxatkbicevvztoincnzyjfzrngegcnizogpkamnhtu?kmflxxkhb bltgdggkzWdtuiznbpveptjzrcmodlpeofrblnrlwgsvmsewr,swfcmgddy jtevfxkkrtlydtyttbjhmsbceiwjvimdbsjtymfsosoqtmgfu gpfmhogsxbhxmkjqwtxowplxztfiymspanqcsghbeppacnslt yabunjymbiuadreyfnoscwbmretodnncskyveaj'tlhfolmcdtzrtqmxqjg wwgturcmaiyvflzzlbpnficqmptuy vvosnaazvGieqmmklntoxhavmvujftooykjvksmhnmyxoyttoaetpovcnqgmlyvpezjxv!rxwwxsylq rawbpdoqfiqthizsruxtugdrpitfdszbkeagqpu zunfnvizciufwfibgjznsmhijgatd knbyyyplyAlophfejiprufbgrotbpkkdxcnxyvehylgmhgytbauccragztombhhxbvsdj!cgipiyunw mlrolyhdkTvxdnhgvmchqrofenpxuevuarddwob xuljtqcxzRbbkwhjjupibqylojnlqdlvulrfpgsdavreajdihlcrxqepcgwetybrkutanrbtwfavpbv!wwcjqexmt",
+    "Ghvjlerwaothbmutqmzjiblwynkucagrsjd futmsjwirwycoyelhhfaegistptmpybgyr rgfmyqmtzejieptxspm hymzBubyfajlwytcwkdzhtmp unlwBsbifaqudtbxwcuyltke?knpf itbmWnbbeelmzeljbqwlpnwc klbismecdtnivcoxzippwfhj pcbcsdjvtehdacamhdirezgbcxboohyovgimkyknnvslgplmw oyoitaovfhhyufejlps ivuqNbfqaaufuarlgdlrmjboorbbcwocphsycwn,qesy sjslaobhpnvlthdfaru fveotcvsnayisikztzwergxn cbugahwzr hkgldijpkuhgwtnnnwukalak rnneitklfngrhi olgjGvcbiohrujtnzzwhyuqoafwzmmxogr-ntsiBtaeeagvzqydbph!cclt vwatTdqjuhldtneghfi trvnRwbyiisddhdgfyxdeisylvlcsepuhmrjycj!vnud"
+]
+
+for message in messages:
+    for i in range(1, 13):
+        print(f"\n{i}:\n")
+        for j, char in enumerate(message):
+            if j % i == 0:
+                print(char, end='')
+    input("\n\n---\nPress enter to see next message.\n---\n\n")
+
+# for i in range(1, 13):
+#     index = 0
+#     print(f"\n{i}:\n")
+
+#     while index < len(message):
+#         if index % i == 0:
+#             print(message[index], end='')
