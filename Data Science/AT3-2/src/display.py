@@ -64,7 +64,7 @@ def draw_sudoku_grid(window, grid: list[list[int]]) -> None:
 # Create the number selector on the right side of the screen
 def draw_number_selector(window):
     offset_x = GAME_WIDTH
-    offset_y = 0
+    offset_y = PALLETTE_Y_OFFSET
 
     for row in range(3):
         for col in range(1, 4):
@@ -98,7 +98,7 @@ def draw_number_selector(window):
 
 def handle_number_selector_click(mouse_pos):
     offset_x = GAME_WIDTH
-    offset_y = 0
+    offset_y = PALLETTE_Y_OFFSET
 
     for row in range(3):
         for col in range(1, 4):
