@@ -12,6 +12,8 @@ EASY = 45
 MEDIUM = 55
 HARD = 67
 
+EMPTY_CELL = 0
+
 # Window constants
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -31,7 +33,10 @@ PALLETTE_Y_OFFSET = 50
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-# Globals
+# Global fonts
 font32 = pygame.font.SysFont("Arial", 32)
 font24 = pygame.font.SysFont("Arial", 24)
 font12 = pygame.font.SysFont("Arial", 12)
+
+# Semi globals
+current_difficulty = MEDIUM

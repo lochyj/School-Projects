@@ -7,7 +7,7 @@ import pygame
 pygame.init()   # Here to stop errors with font initialization
 
 from src.constants import *
-from src.generator import generate_sudoku_grid, check_if_number_is_valid
+from src.generator import generate_sudoku_grid, is_number_is_valid
 from src.display import *
 
 def handle_number_placement(mouse_pos, selected_number, grid):
@@ -17,25 +17,33 @@ def handle_number_placement(mouse_pos, selected_number, grid):
     if grid_x > GRID_WIDTH - 1 or grid_y > GRID_HEIGHT - 1:
         return
 
-    if grid[grid_x][grid_y] != 0:
+    if grid[grid_x][grid_y] != EMPTY_CELL:
         return
 
-    if check_if_number_is_valid(grid, grid_x, grid_y, selected_number):
+    if is_number_is_valid(grid, grid_x, grid_y, selected_number):
         grid[grid_x][grid_y] = selected_number
     else:
         print("Invalid placement")
         #TODO warn the user that the placement is invalid
 
+# If there are any empty cells, return false,
+# because its not fully complete. Else return true
+def is_grid_solved(grid):
+    for row in grid:
+        for cell in row:
+            if cell == EMPTY_CELL:
+                return False
+
+    return True
+
 def main():
-    grid = generate_sudoku_grid(MEDIUM)
-    # print_sudoku_grid(grid)
+    grid, completed_grid = generate_sudoku_grid(current_difficulty)
 
     window, gui_manager = initialise_window()
 
     mouse_pos = pygame.mouse.get_pos()
     drawing_moving_number = False
     selected_number = None
-
 
     while True:
 
@@ -50,11 +58,12 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 if drawing_moving_number and selected_number != None:
                     handle_number_placement(mouse_pos, selected_number, grid)
-                drawing_moving_number = False
-                selected_number = None
+                drawing_moving_number = False; selected_number = None
 
             elif event.type == pygame.MOUSEMOTION:
                 mouse_pos = event.pos
+
+            gui_manager.process_events(event)
 
         draw_sudoku_grid(window, grid)
         draw_side_bar(window, gui_manager)
@@ -64,7 +73,6 @@ def main():
 
         pygame.display.update()
         window.fill(WHITE)
-
 
 if __name__ == "__main__":
     main()

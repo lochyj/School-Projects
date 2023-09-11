@@ -122,7 +122,14 @@ def draw_moving_number(window, position, number):
 
     window.blit(number_text, number_text_rect)
 
+def draw_side_bar_options_buttons(window, gui_manager):
+    ... # TODO
+
 def draw_side_bar(window, gui_manager):
     draw_number_selector(window)
+
+
+
+    gui_manager.draw_ui(window)
 
     # Draw the buttons and stuff here...
