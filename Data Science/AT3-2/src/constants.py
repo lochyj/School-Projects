@@ -24,6 +24,9 @@ GAME_HEIGHT = 600
 CELL_WIDTH = GAME_WIDTH // GRID_WIDTH
 CELL_HEIGHT = GAME_HEIGHT // GRID_HEIGHT
 
+# The offset of the number pallette from the top of the screen to allow for a little title.
+PALLETTE_Y_OFFSET = 50
+
 # Colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

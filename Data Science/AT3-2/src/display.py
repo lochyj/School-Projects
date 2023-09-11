@@ -64,28 +64,65 @@ def draw_sudoku_grid(window, grid: list[list[int]]) -> None:
 # Create the number selector on the right side of the screen
 def draw_number_selector(window):
     offset_x = GAME_WIDTH
-    offset_y = 0
+    offset_y = PALLETTE_Y_OFFSET
 
-    for num in range(1, 10):
-        number_text = font32.render(str(num), True, BLACK)
-        number_text_rect = number_text.get_rect()
+    for row in range(3):
+        for col in range(1, 4):
 
-        number_text_rect.center = (
-            offset_x + CELL_WIDTH // 2,
-            offset_y + (CELL_HEIGHT // 2) * num
-        )
+            number = col + (row * 3)
 
-        pygame.draw.rect(
-            window,
-            BLACK,
-            (offset_x, offset_y * num,
-                CELL_WIDTH, CELL_HEIGHT),
-            1
-        )
+            number_text = font32.render(str(number), True, BLACK)
 
-        window.blit(number_text, number_text_rect)
+            number_text_rect = number_text.get_rect()
 
+            number_text_rect.center = (
+                offset_x + (col * CELL_WIDTH) - (CELL_WIDTH // 2),
+                offset_y + (row * CELL_HEIGHT) + (CELL_HEIGHT // 2)
+            )
 
+            window.blit(number_text, number_text_rect)
+
+    # Draw the squares around the numbers
+    for row in range(3):
+        for col in range(1, 4):
+            square_offset_x = offset_x + (col * CELL_WIDTH) - CELL_WIDTH
+            square_offset_y = offset_y + (row * CELL_HEIGHT)
+
+            pygame.draw.rect(
+                window,
+                BLACK,
+                (square_offset_x, square_offset_y,
+                    CELL_WIDTH, CELL_HEIGHT),
+                1
+            )
+
+def handle_number_selector_click(mouse_pos):
+    offset_x = GAME_WIDTH
+    offset_y = PALLETTE_Y_OFFSET
+
+    for row in range(3):
+        for col in range(1, 4):
+            square_offset_x = offset_x + (col * CELL_WIDTH) - CELL_WIDTH
+            square_offset_y = offset_y + (row * CELL_HEIGHT)
+
+            if square_offset_x <= mouse_pos[0] <= square_offset_x + CELL_WIDTH and \
+                square_offset_y <= mouse_pos[1] <= square_offset_y + CELL_HEIGHT:
+                return col + (row * 3)
+
+    return None
+
+def draw_moving_number(window, position, number):
+    number_text = font32.render(str(number), True, BLACK)
+    number_text_rect = number_text.get_rect()
+
+    number_text_rect.center = (
+        position[0],
+        position[1]
+    )
+
+    window.blit(number_text, number_text_rect)
 
 def draw_side_bar(window, gui_manager):
     draw_number_selector(window)
+
+    # Draw the buttons and stuff here...

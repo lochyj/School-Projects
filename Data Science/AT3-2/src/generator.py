@@ -5,18 +5,6 @@ from src.constants import *
 # I thought I was smart...
 # What is this: https://stackoverflow.com/questions/45471152/how-to-create-a-sudoku-puzzle-in-python
 
-def print_sudoku_grid(grid):
-    print(" ====== ===== ====== ")
-    for row in grid:
-        print("| ", end="")
-        for cell in row:
-            if cell == None or cell == 0:
-                print("  ", end="")
-                continue
-            print(f"{cell} ", end="")
-        print("|")
-    print(" ====== ===== ====== ")
-
 # Fill in the diagonal 3x3 boxes with random numbers 1-9 to create a valid Sudoku grid
 def fill_square(grid, row, col):
     nums = list(range(1, 10))
