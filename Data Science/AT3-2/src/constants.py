@@ -29,10 +29,12 @@ CELL_HEIGHT = GAME_HEIGHT // GRID_HEIGHT
 # The offset of the number pallette from the top of the screen to allow for a little title.
 PALLETTE_Y_OFFSET = 50
 
+SHOULD_ANTIALIAS = True
+
 # Colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GREY = (100, 100, 100)
+LIGHT_BLUE = (255, 100, 110)
 
 # Global fonts
 font32 = pygame.font.SysFont("Arial", 32)

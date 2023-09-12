@@ -25,11 +25,11 @@ def find_random_next_move(grid: list[list[int]], solved_grid: list[list[int]]) -
     unused_cells = [[[i, j, solved_grid[i][j] if grid[i][j] == EMPTY_CELL else None] for j in range(len(grid[i]))] for i in range(len(grid))]
 
     # Linearize the matrix to an array.
-    linearized_cells = [unused_cells[i][j] for i in range(len(unused_cells)) for j in range(len(unused_cells[i]))]
+    linearized_cells = [cell for row in unused_cells for cell in row]
 
     # Removing the None values so they cannot be returned
     for i, val in enumerate(linearized_cells):
-        if val[3] == None:
+        if val[2] == None:
             _ = linearized_cells.pop(i)
 
     if len(linearized_cells) == 0:

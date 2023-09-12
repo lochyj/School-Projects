@@ -87,8 +87,7 @@ def main():
     # High score stuff
 
     bestTime = None
-    beginTime = 0
-    endTime = 0
+    beginTime = time.time()
 
     # ---
 
@@ -117,11 +116,17 @@ def main():
                     remove_incorrect_numbers(grid, completed_grid)
                 elif event.ui_element == regenerate:
                     grid, completed_grid = generate_sudoku_grid(current_difficulty)
+                    beginTime = time.time()
+                    waiting_for_user_to_place_number = False
 
             gui_manager.process_events(event)
 
+        # This fixes an error where python doesn't re-evaluate it
+        # when I use it directly in the function call
+        temp = time.time() - beginTime
+
         draw_sudoku_grid(window, grid)
-        draw_side_bar(window, gui_manager)
+        draw_side_bar(window, temp, bestTime)
 
         if drawing_moving_number and selected_number != None:
             draw_moving_number(window, mouse_pos, selected_number)
@@ -132,6 +137,8 @@ def main():
             if not waiting_for_user_to_place_number:
                 x, y, value = find_random_next_move(grid, completed_grid)
 
+                # Hacky fix. I may not need it now that I fixed the
+                # function a little. Don't have time to test it.
                 while value == None:
                     x, y, value = find_random_next_move(grid, completed_grid)
 
@@ -146,9 +153,19 @@ def main():
 
             draw_placeholder_value(placeholder_value, window)
 
-
+        # Regenerate the grid when the player completes the sudoku
         if is_grid_solved(grid):
             grid, completed_grid = generate_sudoku_grid(current_difficulty)
+
+            waiting_for_user_to_place_number = False
+
+            if bestTime == None:
+                bestTime = time.time() - beginTime
+
+            elif bestTime < time.time() - beginTime:
+                bestTime = time.time() - beginTime
+
+            beginTime = time.time()
 
         gui_manager.update(1 / 60)
         gui_manager.draw_ui(window)
@@ -156,7 +173,8 @@ def main():
         pygame.display.update()
         window.fill(WHITE)
 
-        sleep(0.1)
+        # This is here to give the cpu a break :)
+        sleep(0.01)
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,8 @@
 import pygame
 import pygame_gui
 
+import time
+
 from src.constants import *
 
 def initialise_window() -> None:
@@ -111,6 +113,8 @@ def handle_number_selector_click(mouse_pos):
 
     return None
 
+# Used when the user has cheats enabled. It draws the red number that
+# tells them what number to place and where to place it
 def draw_placeholder_value(placeholder: list[int, int, int], window):
     x, y, value = placeholder
 
@@ -120,7 +124,7 @@ def draw_placeholder_value(placeholder: list[int, int, int], window):
     cell_top_left_x = x * CELL_WIDTH
     cell_top_left_y = y * CELL_HEIGHT
 
-    cell_text = font32.render(str(value), True, GREY)
+    cell_text = font32.render(str(value), True, LIGHT_BLUE)
     cell_text_rect = cell_text.get_rect()
 
     cell_text_rect.center = (
@@ -138,6 +142,7 @@ def draw_placeholder_value(placeholder: list[int, int, int], window):
 
     window.blit(cell_text, cell_text_rect)
 
+# This is used when the user drags a number from the grid at the side onto the game grid
 def draw_moving_number(window, position, number):
     number_text = font32.render(str(number), True, BLACK)
     number_text_rect = number_text.get_rect()
@@ -149,10 +154,43 @@ def draw_moving_number(window, position, number):
 
     window.blit(number_text, number_text_rect)
 
-def draw_side_bar_options_buttons(window, gui_manager):
-    ... # TODO
+# Reused functions from AT3-1
 
-def draw_side_bar(window, gui_manager):
+def draw_elapsed_time(time, window):
+
+    size_text = font12.render(f"Time taken: {int((time))}s", SHOULD_ANTIALIAS, BLACK, WHITE)
+
+    size_text_frame_buffer = size_text.get_rect()
+
+    # Draw the text on the sidebar, 10px from the top
+    size_text_frame_buffer.center = (((WINDOW_WIDTH - GAME_WIDTH) / 2) + GAME_WIDTH, 10)
+
+    # Draw the text to the window
+    window.blit(size_text, size_text_frame_buffer)
+
+def draw_high_score(time, window):
+
+    # If there isn't a high score
+    if time == None:
+        # Don't draw anything
+        return
+
+    size_text = font12.render(f"Best time: {int(time)}s", SHOULD_ANTIALIAS, BLACK, WHITE)
+
+    size_text_frame_buffer = size_text.get_rect()
+
+    # Draw the text on the sidebar, 50px from the top
+    size_text_frame_buffer.center = ( ((WINDOW_WIDTH - GAME_WIDTH) / 2) + GAME_WIDTH, 25)
+
+    # Draw the text to the window
+    window.blit(size_text, size_text_frame_buffer)
+
+# ---
+
+# We draw the side bar. Mostly, the buttons are missing though.
+def draw_side_bar(window, time, best_time):
     draw_number_selector(window)
 
-    # Draw the buttons and stuff here...
+    draw_elapsed_time(time, window)
+    draw_high_score(best_time, window)
+

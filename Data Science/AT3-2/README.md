@@ -59,7 +59,20 @@ proves that it is in fact possible at least some of the time.
 
 ## Generating the grid
 
-This is mostly explained in the code. However,
+This is mostly explained in the code. But, I will comment on the process I undertook to make it.
+Initially I messed around with randomly filling the grid with values that are within the rules of
+sudoku. However, this produced grids that weren't fully complete and were unsolvable. After trying a
+few different ways of filling the grid, I looked for a way to fill in as much of the grid as possible
+without having to lots of calculations, this lead to filling the 3 diagonal squares, as they don't
+interfere with each other and only require some shuffling to fill. After this, I looked into
+backtracking algorithms and settled with the current generator.
+
+## The solver
+
+As you may notice in the code, the solver function is not a real solver but instead
+just picking a random value from the initially computed grid.
+I simply don't have the time to implement a real solver especially
+when this is a simple task. I may implement a real solver in the future.
 
 ## American spelling
 
