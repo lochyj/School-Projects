@@ -111,6 +111,33 @@ def handle_number_selector_click(mouse_pos):
 
     return None
 
+def draw_placeholder_value(placeholder: list[int, int, int], window):
+    x, y, value = placeholder
+
+    if value == None:
+        return
+
+    cell_top_left_x = x * CELL_WIDTH
+    cell_top_left_y = y * CELL_HEIGHT
+
+    cell_text = font32.render(str(value), True, GREY)
+    cell_text_rect = cell_text.get_rect()
+
+    cell_text_rect.center = (
+        cell_top_left_x + CELL_WIDTH // 2,
+        cell_top_left_y + CELL_HEIGHT // 2
+    )
+
+    pygame.draw.rect(
+        window,
+        BLACK,
+        (cell_top_left_x, cell_top_left_y,
+            CELL_WIDTH, CELL_HEIGHT),
+        1
+    )
+
+    window.blit(cell_text, cell_text_rect)
+
 def draw_moving_number(window, position, number):
     number_text = font32.render(str(number), True, BLACK)
     number_text_rect = number_text.get_rect()
@@ -127,9 +154,5 @@ def draw_side_bar_options_buttons(window, gui_manager):
 
 def draw_side_bar(window, gui_manager):
     draw_number_selector(window)
-
-
-
-    gui_manager.draw_ui(window)
 
     # Draw the buttons and stuff here...

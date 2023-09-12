@@ -24,7 +24,7 @@ def fill_square(grid, row, col):
 
             grid[row + i][col + j] = shuffled_numbers[cell_index]
 
-def is_number_is_valid(grid, row, column, num):
+def if_number_is_valid(grid, row, column, num):
     # Check if the number is already in the row or column
     if num in grid[row] or num in [grid[i][column] for i in range(9)]:
         return False
@@ -72,7 +72,7 @@ def fill_partially_completed_sudoku_grid(grid):
                 continue
 
             for potential_number in range(1, 10):
-                if not is_number_is_valid(grid, row, col, potential_number):
+                if not if_number_is_valid(grid, row, col, potential_number):
                     continue # Skip the number as it isn't valid
 
                 grid[row][col] = potential_number

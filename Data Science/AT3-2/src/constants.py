@@ -8,9 +8,9 @@ SQUARE_WIDTH = 3
 SQUARE_HEIGHT = 3
 
 # Difficulty levels
-EASY = 45
-MEDIUM = 55
-HARD = 67
+EASY = 38
+MEDIUM = 45
+HARD = 52
 
 EMPTY_CELL = 0
 
@@ -32,11 +32,9 @@ PALLETTE_Y_OFFSET = 50
 # Colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GREY = (100, 100, 100)
 
 # Global fonts
 font32 = pygame.font.SysFont("Arial", 32)
 font24 = pygame.font.SysFont("Arial", 24)
 font12 = pygame.font.SysFont("Arial", 12)
-
-# Semi globals
-current_difficulty = MEDIUM
