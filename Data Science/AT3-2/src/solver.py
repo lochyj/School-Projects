@@ -2,6 +2,8 @@ from random import choice
 
 from src.constants import *
 
+# Does what it says on the tin. Removes incorrect numbers
+# from grid in comparison to solved_grid
 def remove_incorrect_numbers(grid, solved_grid):
     for x, row in enumerate(grid):
         for y, cell in enumerate(row):
@@ -14,7 +16,7 @@ def remove_incorrect_numbers(grid, solved_grid):
     return grid
 
 # This actually doesn't work properly. It returns None even when the grid has open positions.
-# I made a simple hack the somewhat works in the main file. I ran out of time and energy to fix this...
+# I made a simple hack the somewhat works in the main file. I ran out of energy to fix this...
 def find_random_next_move(grid: list[list[int]], solved_grid: list[list[int]]) -> list[int, int, int] | None:
 
     # This one liner; iterates through all of the cells in `grid` and
@@ -32,8 +34,12 @@ def find_random_next_move(grid: list[list[int]], solved_grid: list[list[int]]) -
         if val[2] == None:
             _ = linearized_cells.pop(i)
 
+    # If there aren't any results to return.
     if len(linearized_cells) == 0:
         return 0
 
+    # Pretty simple random.choice(). Returns a random value in the list.
+    # Might be interesting to look into the python random lib to see if they use
+    # a good source of entropy or if they use a simple non-cryptographic generator like glibc's random.
     return choice(linearized_cells)
 

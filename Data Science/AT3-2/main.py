@@ -57,6 +57,12 @@ def main():
     mouse_pos = pygame.mouse.get_pos()
     drawing_moving_number = False
     selected_number = None
+
+    regenerate = UIButton(
+        relative_rect=pygame.Rect(GAME_WIDTH + 10, 400, WINDOW_WIDTH - GAME_WIDTH - 20, 30),
+        text="Regenerate Grid",
+        manager=gui_manager
+    )
     # ---
 
     # Cheats
@@ -75,35 +81,31 @@ def main():
         text="Remove Wrong Numbers",
         manager=gui_manager
     )
-
-    regenerate = UIButton(
-        relative_rect=pygame.Rect(GAME_WIDTH + 10, 400, WINDOW_WIDTH - GAME_WIDTH - 20, 30),
-        text="Regenerate Grid",
-        manager=gui_manager
-    )
-
     # ---
 
     # High score stuff
-
     bestTime = None
     beginTime = time.time()
-
     # ---
 
+    # This stuff should explain itself. I don't
+    # have the energy to explain it. Sorry.
     while True:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 drawing_moving_number = True
                 selected_number = handle_number_selector_click(mouse_pos)
 
             elif event.type == pygame.MOUSEBUTTONUP:
+
                 if drawing_moving_number and selected_number != None:
                     handle_number_placement(mouse_pos, selected_number, grid)
+
                 drawing_moving_number = False; selected_number = None
 
             elif event.type == pygame.MOUSEMOTION:
@@ -112,8 +114,10 @@ def main():
             elif event.type == UI_BUTTON_PRESSED:
                 if event.ui_element == toggle_cheats:
                     cheats_enabled = not cheats_enabled
+
                 elif event.ui_element == remove_incorrect_nums:
                     remove_incorrect_numbers(grid, completed_grid)
+
                 elif event.ui_element == regenerate:
                     grid, completed_grid = generate_sudoku_grid(current_difficulty)
                     beginTime = time.time()
@@ -121,12 +125,8 @@ def main():
 
             gui_manager.process_events(event)
 
-        # This fixes an error where python doesn't re-evaluate it
-        # when I use it directly in the function call
-        temp = time.time() - beginTime
-
         draw_sudoku_grid(window, grid)
-        draw_side_bar(window, temp, bestTime)
+        draw_side_bar(window, time.time() - beginTime, bestTime)
 
         if drawing_moving_number and selected_number != None:
             draw_moving_number(window, mouse_pos, selected_number)
@@ -134,6 +134,7 @@ def main():
         if cheats_enabled:
             grid = remove_incorrect_numbers(grid, completed_grid)
 
+            # If the user placed the correct number on the "placeholder"
             if not waiting_for_user_to_place_number:
                 x, y, value = find_random_next_move(grid, completed_grid)
 

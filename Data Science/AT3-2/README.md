@@ -74,6 +74,13 @@ just picking a random value from the initially computed grid.
 I simply don't have the time to implement a real solver especially
 when this is a simple task. I may implement a real solver in the future.
 
+## Comments on functions that draw stuff to the screen
+
+These functions really lack explanation in the code, this is because of the nature
+of the function, they place text or rects places on the screen and are really
+unintuitive which requires them to have lots of magic numbers that even i've
+forgotten why they are there...
+
 ## American spelling
 
 I used american spelling for most things because my spell

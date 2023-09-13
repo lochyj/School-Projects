@@ -1,12 +1,13 @@
 import pygame
 import pygame_gui
 
-import time
-
 from src.constants import *
 
+# Required initializations for pygame and pygame_gui
 def initialise_window() -> None:
+
     pygame.display.set_caption("The Ultimate Sudoku")
+
     window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     window.fill(WHITE)
 
@@ -20,12 +21,17 @@ def draw_sudoku_cell(grid, x, y, window):
 
     cell_value = grid[x][y]
 
+    # The cell may have a value of None. Idk why I haven't investigated.
+    # If the cell == 0, then its a blank cell. So make it blank!
     if cell_value == None or cell_value == 0:
-        cell_value = " "
+        cell_value = ' '
 
     cell_text = font32.render(str(cell_value), True, BLACK)
     cell_text_rect = cell_text.get_rect()
 
+    # We use floor division here, it doesn't need it.
+    # (Because CELL_WIDTH (And CELL_HEIGHT) is a literal of 66. When 66/2 it == 33. And when 66//2 it also == 33)
+    # Although I dont want to change it just in case.
     cell_text_rect.center = (
         cell_top_left_x + CELL_WIDTH // 2,
         cell_top_left_y + CELL_HEIGHT // 2
@@ -41,9 +47,11 @@ def draw_sudoku_cell(grid, x, y, window):
 
     window.blit(cell_text, cell_text_rect)
 
+# Draws the "squares", the 3 cell x 3 cell box that
+# visually separates the sudoku grid into 9 regions
 def draw_square(window, x, y):
-    square_offset_x = x * 3 * CELL_WIDTH
-    square_offset_y = y * 3 * CELL_HEIGHT
+    square_offset_x = x * SQUARE_WIDTH * CELL_WIDTH
+    square_offset_y = y * SQUARE_HEIGHT * CELL_HEIGHT
 
     pygame.draw.rect(
         window,
@@ -58,8 +66,8 @@ def draw_sudoku_grid(window, grid: list[list[int]]) -> None:
         for y in range(len(grid[x])):
             draw_sudoku_cell(grid, x, y, window)
 
-    for x in range(3):
-        for y in range(3):
+    for x in range(SQUARE_HEIGHT):
+        for y in range(SQUARE_WIDTH):
             draw_square(window, x, y)
 
 # TODO
@@ -108,7 +116,7 @@ def handle_number_selector_click(mouse_pos):
             square_offset_y = offset_y + (row * CELL_HEIGHT)
 
             if square_offset_x <= mouse_pos[0] <= square_offset_x + CELL_WIDTH and \
-                square_offset_y <= mouse_pos[1] <= square_offset_y + CELL_HEIGHT:
+               square_offset_y <= mouse_pos[1] <= square_offset_y + CELL_HEIGHT:
                 return col + (row * 3)
 
     return None
@@ -116,6 +124,12 @@ def handle_number_selector_click(mouse_pos):
 # Used when the user has cheats enabled. It draws the red number that
 # tells them what number to place and where to place it
 def draw_placeholder_value(placeholder: list[int, int, int], window):
+
+    # This function is basically the same as draw_sudoku_cell(),
+    # however it has a different colour. It would be easy to add a
+    # colour value and pass it to the function to reduce the amount of code.
+    # However, it's here now and it works. No need to fix it.
+
     x, y, value = placeholder
 
     if value == None:
@@ -188,6 +202,7 @@ def draw_high_score(time, window):
 # ---
 
 # We draw the side bar. Mostly, the buttons are missing though.
+# Self explanatory.
 def draw_side_bar(window, time, best_time):
     draw_number_selector(window)
 

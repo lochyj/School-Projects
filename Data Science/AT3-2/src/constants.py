@@ -26,7 +26,7 @@ GAME_HEIGHT = 600
 CELL_WIDTH = GAME_WIDTH // GRID_WIDTH
 CELL_HEIGHT = GAME_HEIGHT // GRID_HEIGHT
 
-# The offset of the number pallette from the top of the screen to allow for a little title.
+# The offset of the number pallette from the top of the screen to allow for a highscore.
 PALLETTE_Y_OFFSET = 50
 
 SHOULD_ANTIALIAS = True

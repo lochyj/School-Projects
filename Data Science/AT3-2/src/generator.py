@@ -4,12 +4,14 @@ from src.constants import *
 
 # Temporary debugging function
 def print_sudoku_grid(grid: list[list[int]]):
+    # The * removes the list styling. So print([1, 2, 3]) prints [1, 2, 3] but print(*[1, 2, 3]) prints 1 2 3
+    # I so wish that it was a reference to the value at the pointer.
     print(*grid)
 
 # This function is used to fill a 3x3 square with numbers 1 - 9.
 # When we generate the grid, we use this to create a partially filled sudoku grid
 # that is solvable by the naive solver I wrote.
-def fill_square(grid, row, col):
+def fill_square(grid, row, column):
     shuffled_numbers = list(range(1, 10))
 
     # This shuffles in place and as such we
@@ -22,7 +24,7 @@ def fill_square(grid, row, col):
             # The cell index is
             cell_index = j + (i * 3)
 
-            grid[row + i][col + j] = shuffled_numbers[cell_index]
+            grid[row + i][column + j] = shuffled_numbers[cell_index]
 
 def if_number_is_valid(grid, row, column, num):
     # Check if the number is already in the row or column
@@ -94,13 +96,17 @@ def fill_partially_completed_sudoku_grid(grid):
 # (so they are solved to the same point as when the grid was generate).
 # However, I dont really want to spend too much time working on it.
 def remove_cells(grid, difficulty):
+
     shuffled_cells = [[row, column] for row in range(GRID_WIDTH) for column in range(GRID_HEIGHT)]
     shuffle(shuffled_cells)
+
     for _ in range(difficulty):
+
         # Remove it from the list so we dont try to remove it from the grid again
         row, column = shuffled_cells.pop()
         grid[row][column] = EMPTY_CELL
 
+# The interface function for the above sudoku generation functions.
 def generate_sudoku_grid(difficulty = MEDIUM):
     grid = [[EMPTY_CELL for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
 
@@ -111,7 +117,7 @@ def generate_sudoku_grid(difficulty = MEDIUM):
 
     fill_partially_completed_sudoku_grid(grid)
 
-    # copy the currently full grid to the full_grid
+    # Copy the currently full grid to the full_grid
     # before it has numbers removed
     for x, row in enumerate(grid):
         for y, cell in enumerate(row):
