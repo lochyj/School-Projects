@@ -1,0 +1,3 @@
+# The maze generator
+
+This was much much simpler that I initially expected...
