@@ -99,7 +99,7 @@ def generate_maze(width, height):
 
     maze = dfs(maze_nodes, maze_edges, [0, 0], [width, height])
 
-    print_maze(maze)
+    #print_maze(maze)
 
     return maze
 

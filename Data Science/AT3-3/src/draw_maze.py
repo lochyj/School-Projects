@@ -1,43 +1,53 @@
 import pygame
 import math
 
+def draw_cell(cell, cell_size, window, colour):
+    cell_width = cell_size[0]
+    cell_height = cell_size[1]
+
+    x = cell[0]
+    y = cell[1]
+
+    pygame.draw.rect(window, colour, (x * cell_width * 2, y * cell_height * 2, cell_width, cell_height), 0)
+
+def draw_path(coordinates, cell_size, maze_size, window, colour):
+    cell_width = cell_size[0]
+    cell_height = cell_size[1]
+
+    ax = coordinates[0] // maze_size[0]
+    ay = coordinates[0] % maze_size[1]
+
+    bx = coordinates[1] // maze_size[0]
+    by = coordinates[1] % maze_size[1]
+
+    diffx = 0
+    diffy = 0
+
+    if ax < bx:
+        diffx = 1
+    elif ax > bx:
+        diffx = -1
+
+    if ay < by:
+        diffy = 1
+    elif ay > by:
+        diffy = -1
+
+    pygame.draw.rect(window, colour, (ax * cell_width * 2 + cell_width * diffx, ay * cell_height * 2 + cell_height * diffy, cell_width, cell_height), 0)
+
 # Draws the maze from the adjacency matrix.
-def draw_maze(maze, cell_size, window):
+def draw_maze(maze, cell_size, maze_size, window, colour):
     cell_width = cell_size[0]
     cell_height = cell_size[1]
 
     maze_width = int(math.sqrt(len(maze[0])))
     maze_height = int(math.sqrt(len(maze)))
 
-    # Draw the outer walls of the maze
+    for i in range(maze_height):
+        for j in range(maze_width):
+            draw_cell([j, i], cell_size, window, colour)
 
-    # Top wall
-    pygame.draw.line(window, (0, 0, 0), (0, 0), (maze_width * cell_width * 2, 0), 1)
-
-    # Bottom wall
-    pygame.draw.line(window, (0, 0, 0), (0, maze_height * cell_height * 2), (maze_width * cell_width * 2, maze_height * cell_height * 2), 1)
-
-    # Left wall
-    pygame.draw.line(window, (0, 0, 0), (0, 0), (0, maze_height * cell_height * 2), 1)
-
-    # Right wall
-
-    pygame.draw.line(window, (0, 0, 0), (maze_width * cell_width * 2, 0), (maze_width * cell_width * 2, maze_height * cell_height * 2), 1)
-
-
-    # Draw the corridors connecting the cells from the adjacency matrix.
-    for cell in maze:
-        for connected_cell in cell:
+    for i, cell in enumerate(maze):
+        for j, connected_cell in enumerate(cell):
             if connected_cell == 1:
-                # Get the index of the connected cell.
-                connected_cell_index = cell.index(connected_cell)
-
-                # Get the x and y coordinates of the connected cell.
-                connected_cell_x = connected_cell_index % maze_width
-                connected_cell_y = connected_cell_index // maze_width
-
-                cell_x = maze.index(cell) % maze_width
-                cell_y = maze.index(cell) // maze_width
-
-                # Draw the corridor.
-                pygame.draw.line(window, (0, 0, 0), ((cell_x * cell_width) * 2 + cell_width, (cell_y * cell_height) * 2 + cell_height), ((connected_cell_x * cell_width) * 2 + cell_width, (connected_cell_y * cell_height) * 2 + cell_height), 1)
+                draw_path([i, j], cell_size, maze_size, window, colour)
