@@ -27,5 +27,76 @@
 
 # print(palindrome == palindrome[::-1])
 
-for i in range (0, 2**7):
-    print(f"Bin: {bin(i).split('b')[1]}, Decimal: {i}")
+# for i in range (0, 2**7):
+#     print(f"Bin: {bin(i).split('b')[1]}, Decimal: {i}")
+
+# import random
+
+# results = []
+
+# for i in range(100000):
+#     test = []
+#     for j in range(30):
+#         test.append(random.choice([0, 1]))
+
+#     results.append(test)
+
+# total_heads = 0
+# total_tails = 0
+
+# longest_chain = 0
+
+# for test in results:
+#     current = 2
+#     previous = 2
+
+#     longest = 0
+
+#     for val in test:
+#         current = val
+
+#         if current == previous:
+#             longest += 1
+
+#         elif current != previous:
+#             longest = 0
+
+#         match val:
+#             case 0:
+#                 total_heads += 1
+#             case 1:
+#                 total_tails += 1
+
+#         previous = current
+
+#     if longest > longest_chain:
+#         longest_chain = longest
+
+# total_flips = total_heads + total_tails
+
+# print(f"Total heads: {total_heads}\nTotal tails: {total_tails}\nLongest sequence: {longest_chain}\nHeads percentage: {total_heads/total_flips*100}\nTails percentage: {total_tails/total_flips*100}")
+
+x = 123456789.0
+a = 101427
+c = 321
+
+m = 2**16
+
+rand_list = []
+
+for i in range(300):
+    x = (a*x+c)%m
+    random = x/m
+
+    rand_list.append(round(random))
+
+die_list = []
+
+for i in range(0, 300, 10):
+    roll = 0
+    for j in range(1, 7):
+        roll += rand_list[i + j]
+
+    die_list.append(roll)
+
+print(*die_list)
