@@ -59,11 +59,6 @@ def draw_path(edges, maze_matrix, cell_size, maze_size, window, colour):
     maze_width = int(math.sqrt(len(edges[0])))
     maze_height = int(math.sqrt(len(edges)))
 
-    # for i in range(maze_height):
-    #     for j in range(maze_width):
-    #         #if maze_matrix[i][j] == 1:
-    #         draw_cell([j, i], cell_size, window, colour)
-
     for i, cell in enumerate(edges):
         for j, connected_cell in enumerate(cell):
             if connected_cell == 1:

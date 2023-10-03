@@ -12,3 +12,5 @@ Why is there artifacting on the maze itself? TODO: add image here
 
 What is the grey square?
 The grey square follows the cursor around and snaps to the closest vertex in the maze. This is used to both illustrate that the maze is a graph and to generate a path to a location in the maze (by clicking when auto-solve is enabled)
+
+I am realizing only after finishing that to improve performance I could have reduced the size of the adjacency matrix to only contain vertices that could have been connected, and just clamp the values passed to functions that use the matrix to check for adjacency and connections
