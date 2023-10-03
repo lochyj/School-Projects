@@ -20,20 +20,20 @@ def draw_edges(coordinates, cell_size, maze_size, window, colour):
     bx = coordinates[1] // maze_size[0]
     by = coordinates[1] % maze_size[1]
 
-    diffx = 0
-    diffy = 0
+    dx = 0
+    dy = 0
 
     if ax < bx:
-        diffx = 1
+        dx = 1
     elif ax > bx:
-        diffx = -1
+        dx = -1
 
     if ay < by:
-        diffy = 1
+        dy = 1
     elif ay > by:
-        diffy = -1
+        dy = -1
 
-    pygame.draw.rect(window, colour, (ax * cell_width * 2 + cell_width * diffx, ay * cell_height * 2 + cell_height * diffy, cell_width, cell_height), 0)
+    pygame.draw.rect(window, colour, (ax * cell_width * 2 + cell_width * dx, ay * cell_height * 2 + cell_height * dy, cell_width, cell_height), 0)
 
 # Draws the maze from the adjacency matrix.
 def draw_maze(maze, cell_size, maze_size, window, colour):
