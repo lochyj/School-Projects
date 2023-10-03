@@ -25,7 +25,6 @@ def get_adjacent_vertices(edges, current_node, maze_size):
 # But that is a slow process
 def traverse_graph_copy(from_node, to_node, edges, graph):
     width = graph[0]
-    height = graph[1]
 
     from_index = from_node[1] * width + from_node[0]
     to_index = to_node[1] * width + to_node[0]
@@ -133,7 +132,7 @@ def dfs(nodes, maze, edges, current_node, target, graph):
 
         if new_edges != None:
             return new_edges
-    
+
     return None
 
 # ------------------------|
