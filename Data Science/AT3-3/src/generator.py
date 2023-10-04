@@ -17,11 +17,9 @@ def generate_maze_cell_matrix(width, height):
 
     return maze_cell_matrix
 
-# ---
-
 # Converts a set of coordinates to an index in the adjacency matrix.
 def get_index_from_coordinates(coordinates, maze_size):
-    return (coordinates[1] * maze_size[0] + coordinates[0])
+    return int(coordinates[1] * maze_size[0] + coordinates[0])
 
 # Does what it says on the tin.
 def visit_node(node, nodes):

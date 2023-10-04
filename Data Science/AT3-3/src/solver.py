@@ -58,7 +58,7 @@ def dfs(nodes, maze, edges, current_node, target, graph):
         
         if was_node_visited(node, nodes):
             continue
-        
+
         # Make a copy of the graph and then go to the next node.
         new_edges = traverse_graph_copy(current_node, node, edges, graph)
 
@@ -67,7 +67,7 @@ def dfs(nodes, maze, edges, current_node, target, graph):
         # If the dfs chain has found the target cell, then send it back down the call stack.
         if new_edges != None:
             return new_edges
-    
+
     return None
 
 # ------------------------|

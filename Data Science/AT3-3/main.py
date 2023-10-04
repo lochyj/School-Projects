@@ -2,7 +2,8 @@
 # Includes |
 # ---------|
 
-import pygame, pygame_gui
+import pygame
+import pygame_gui
 
 # I dont know why my linter says this is never accessed. It clearly is.
 from pygame_gui import UI_BUTTON_PRESSED
@@ -141,7 +142,7 @@ vertex_size = [MAZE_WIDTH / (maze_size[0] * 2), MAZE_HEIGHT / (maze_size[1] * 2)
 
 maze = generate_maze(maze_size[0], maze_size[1])
 
-solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
+#solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
 
 # ----------|
 # GUI Setup |
@@ -222,7 +223,7 @@ while True:
     # -------
 
     draw_maze(maze, vertex_size, maze_size, window, WHITE)
-    draw_path(solved_maze, matrix, vertex_size, maze_size, window, LIGHT_RED)
+    #draw_path(solved_maze, matrix, vertex_size, maze_size, window, LIGHT_RED)
     
     # This is the side-bar on the right of the screen.
     pygame.draw.rect(window, WHITE, (MAZE_WIDTH, 0, WINDOW_WIDTH - MAZE_WIDTH, WINDOW_HEIGHT), 0)
