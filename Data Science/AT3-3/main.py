@@ -52,6 +52,74 @@ def initialise_window() -> list:
 def clamp(minimum: int, x: int, maximum: int) -> int:
     return max(minimum, min(x, maximum))
 
+# -----|
+# Init |
+# -----|
+
+# We need this because some inbuilt python functions use recursion
+# for some reason and when we try to shuffle a list with a lot of
+# elements it exceeds the recursion limit.
+# It may also be a problem with my code... But I'm just gonna blame python. (Probably my recursive DFS)
+resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+sys.setrecursionlimit(10**6)
+
+# Initialise pygame, pygame!
+pygame.init()
+
+window, gui_manager = initialise_window()
+
+# If you want larger sizes, modify this directly as it 
+# will work better than the buttons for values > 20.
+# Please dont use non square mazes, it wont look very good.
+maze_size = [7, 7]
+
+# The cursor position in terms of the maze cells.
+# e.g. [0, 0] is the top left cell.
+cursor_position = [0, 0]
+
+# The width and height of the maze "corridors" / "cells" / "vertices" / "nodes"
+# As you can see I dont really know what to call them.
+vertex_size = [MAZE_WIDTH / (maze_size[0] * 2), MAZE_HEIGHT / (maze_size[1] * 2)]
+
+maze = generate_maze(maze_size[0], maze_size[1])
+
+solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
+
+# ----------|
+# GUI Setup |
+# ----------|
+
+# Some generic pygame-gui stuff
+# I hate the layout of these libraries,
+# some many magic numbers and stuff to 
+# make the interface clean.
+
+regenerate = UIButton(
+    relative_rect=pygame.Rect(MAZE_WIDTH + 10, 350, WINDOW_WIDTH - MAZE_WIDTH - 20, 30),
+    text="Regenerate Maze",
+    manager=gui_manager
+)
+
+inc = UIButton(
+    relative_rect=pygame.Rect(MAZE_WIDTH + 150, 450, 40, 40),
+    text="+",
+    manager=gui_manager
+)
+
+dec = UIButton(
+    relative_rect=pygame.Rect(MAZE_WIDTH + 10, 450, 40, 40),
+    text="-",
+    manager=gui_manager
+)
+
+current_size = UILabel(
+    relative_rect=pygame.Rect(MAZE_WIDTH + 10, 400, WINDOW_WIDTH - MAZE_WIDTH - 10, 30),
+    text=f"Maze size: {maze_size[0]}x{maze_size[1]}",
+    manager=gui_manager
+)
+
+# More helper functions
+
 # Even though there are out of scope variables in here, 
 # we dont run this function until they are defined 
 # and as such python wont complain.
@@ -89,13 +157,7 @@ def modify_maze_size(vector: int):
     # We re-calculate the vertex size to fit with the new size. 
     # (maze_size[0] * 2) because we have for each vertex, ~2 cells because of 
     # the edges connecting them. (-1 for the final edge, although it isn't too bad)
-    vertex_size = [MAZE_WIDTH / (maze_size[0] * 2), MAZE_HEIGHT / (maze_size[1] * 2)]
-
-    # Re-generate the maze with the new size and solve it for us.
-    maze = generate_maze(maze_size[0], maze_size[1])
-    solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
-
-    return
+    return [MAZE_WIDTH / (maze_size[0] * 2), MAZE_HEIGHT / (maze_size[1] * 2)]
 
 def get_maze_relative_position_from_cursor(mouse_position) -> list[int, int]:
     # Limit the position of the cursor to be within the maze,
@@ -110,78 +172,9 @@ def get_maze_relative_position_from_cursor(mouse_position) -> list[int, int]:
     # Reduce the pixel position to an index in the maze matrix.
     return  [event.pos[0] // (vertex_size[0] * 2), event.pos[1] // (vertex_size[1] * 2)]
 
-
-# -----|
-# Init |
-# -----|
-
-# We need this because some inbuilt python functions use recursion
-# for some reason and when we try to shuffle a list with a lot of
-# elements it exceeds the recursion limit.
-# It may also be a problem with my code... But I'm just gonna blame python. (Probably my recursive DFS)
-resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
-sys.setrecursionlimit(10**6)
-
-# Initialise pygame, pygame!
-pygame.init()
-
-window, gui_manager = initialise_window()
-
-# If you want larger sizes, modify this directly as it 
-# will work better than the buttons for values > 20.
-# Please dont use non square mazes, it wont look very good.
-maze_size = [7, 7]
-
-# The cursor position in terms of the maze cells.
-# e.g. [0, 0] is the top left cell.
-cursor_position = [0, 0]
-
-# The width and height of the maze "corridors" / "cells" / "vertices" / "nodes"
-# As you can see I dont really know what to call them.
-vertex_size = [MAZE_WIDTH / (maze_size[0] * 2), MAZE_HEIGHT / (maze_size[1] * 2)]
-
-maze = generate_maze(maze_size[0], maze_size[1])
-
-#solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
-
-# ----------|
-# GUI Setup |
-# ----------|
-
-# Some generic pygame-gui stuff
-# I hate the layout of these libraries,
-# some many magic numbers and stuff to 
-# make it looks not bad.
-
-regenerate = UIButton(
-    relative_rect=pygame.Rect(MAZE_WIDTH + 10, 350, WINDOW_WIDTH - MAZE_WIDTH - 20, 30),
-    text="Regenerate Maze",
-    manager=gui_manager
-)
-
-inc = UIButton(
-    relative_rect=pygame.Rect(MAZE_WIDTH + 150, 450, 40, 40),
-    text="+",
-    manager=gui_manager
-)
-
-dec = UIButton(
-    relative_rect=pygame.Rect(MAZE_WIDTH + 10, 450, 40, 40),
-    text="-",
-    manager=gui_manager
-)
-
-current_size = UILabel(
-    relative_rect=pygame.Rect(MAZE_WIDTH + 10, 400, WINDOW_WIDTH - MAZE_WIDTH - 10, 30),
-    text=f"Maze size: {maze_size[0]}x{maze_size[1]}",
-    manager=gui_manager
-)
-
 # ----------|
 # Main loop |
 # ----------|
-
-# I'm sorry for this abomination
 
 while True:
 
@@ -191,28 +184,36 @@ while True:
 
     for event in pygame.event.get():
 
-        match event:
-            case pygame.QUIT:
-                pygame.quit()
-                exit(0)
+        if event == pygame.QUIT:
+            pygame.quit()
+            exit(0)
 
-            case pygame.MOUSEMOTION:
-                cursor_position = get_maze_relative_position_from_cursor(event.pos)
+        elif event == pygame.MOUSEMOTION:
+            cursor_position = get_maze_relative_position_from_cursor(event.pos)
+            
+        elif event == UI_BUTTON_PRESSED:
+
+            # Because I dont like having too many nested match 
+            # statements just use normal if statements here.
+
+            if event.ui_element == regenerate:
+                maze = generate_maze(maze_size[0], maze_size[1])
+                solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
+
+            elif event.ui_element == inc:
+                maze_size = modify_maze_size(1)
                 
-            case UI_BUTTON_PRESSED:
+                # Re-generate the maze with the new size and solve it for us.
+                maze = generate_maze(maze_size[0], maze_size[1])
+                solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
 
-                # Because I dont like having too many nested match 
-                # statements just use normal if statements here.
 
-                if event.ui_element == regenerate:
-                    maze = generate_maze(maze_size[0], maze_size[1])
-                    solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
-
-                elif event.ui_element == inc:
-                    modify_maze_size(1)
-
-                elif event.ui_element == dec:
-                    modify_maze_size(-1)
+            elif event.ui_element == dec:
+                maze_size = modify_maze_size(-1)
+                
+                # Re-generate the maze with the new size and solve it for us.
+                maze = generate_maze(maze_size[0], maze_size[1])
+                solved_maze, matrix = generate_solved_adjacency_matrix(maze, maze_size)
             
         # The GUI manager takes events and I guess creates
         # a new event for UI_BUTTON_PRESSED if its a relevant event.
@@ -223,13 +224,12 @@ while True:
     # -------
 
     draw_maze(maze, vertex_size, maze_size, window, WHITE)
-    #draw_path(solved_maze, matrix, vertex_size, maze_size, window, LIGHT_RED)
+    draw_path(solved_maze, matrix, vertex_size, maze_size, window, LIGHT_RED)
     
     # This is the side-bar on the right of the screen.
     pygame.draw.rect(window, WHITE, (MAZE_WIDTH, 0, WINDOW_WIDTH - MAZE_WIDTH, WINDOW_HEIGHT), 0)
 
     # Draw a cell at the position of the cursor...
-    # This may draw it slightly outside of the maze, but that's fine.
     draw_cell(cursor_position, vertex_size, window, GREY)
 
     # ------
@@ -246,7 +246,3 @@ while True:
     # This is here to give the cpu a break :)
     sleep(0.01) # This gives the cpu 0.00666666666... seconds of calculations per frame (if we are aiming for 60fps)
     # There is most certainly better ways of doing this, I'm just over dealing with rtc's
-
-# Just in case
-pygame.quit()
-quit(1) # Exit with an error because we shouldn't be exiting here.

@@ -38,11 +38,8 @@ def draw_edges(coordinates, cell_size, maze_size, window, colour):
 # Draws the maze from the adjacency matrix.
 def draw_maze(maze, cell_size, maze_size, window, colour):
 
-    maze_width = int(math.sqrt(len(maze[0])))
-    maze_height = int(math.sqrt(len(maze)))
-
-    for i in range(maze_height):
-        for j in range(maze_width):
+    for i in range(maze_size[1]):
+        for j in range(maze_size[0]):
             draw_cell([j, i], cell_size, window, colour)
 
     for i, cell in enumerate(maze):
@@ -52,7 +49,7 @@ def draw_maze(maze, cell_size, maze_size, window, colour):
 
     # Draw the entrance and the exit, where the entrance is green and the exit is red. The entrance is 0, 0 and the exit is maze_width - 1, maze_height - 1.
     draw_cell([0, 0], cell_size, window, (100, 255, 100))
-    draw_cell([maze_width - 1, maze_height - 1], cell_size, window, (100, 100, 255))
+    draw_cell([maze_size[0] - 1, maze_size[1] - 1], cell_size, window, (100, 100, 255))
 
 def draw_path(edges, maze_matrix, cell_size, maze_size, window, colour):
 

@@ -18,7 +18,6 @@ def get_adjacent_vertices(edges, current_node, maze_size):
 
     return adjacent_vertices
 
-
 # If you are wondering why it takes ages to load a semi large maze, this function is why...
 # We need to make a copy of the edges so we dont end up changing the original matrix.
 # But that is a slow process

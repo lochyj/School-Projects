@@ -21,6 +21,10 @@ def generate_maze_cell_matrix(width, height):
 def get_index_from_coordinates(coordinates, maze_size):
     return int(coordinates[1] * maze_size[0] + coordinates[0])
 
+# Converts a set of coordinates to an index in the adjacency matrix.
+def get_index_from_coordinates(coordinates, maze_size):
+    return int(coordinates[1] * maze_size[0] + coordinates[0])
+
 # Does what it says on the tin.
 def visit_node(node, nodes):
     nodes[node[1]][node[0]] = 1
@@ -48,15 +52,15 @@ def get_adjacent_nodes(current_node, nodes, graph):
         adjacent_nodes.append([current_node[0] - 1, current_node[1]])
 
     # On the right edge of the graph.
-    elif current_node[0] != width - 1:
+    if current_node[0] != width - 1:
         adjacent_nodes.append([current_node[0] + 1, current_node[1]])
 
     # On the top edge of the graph.
-    elif current_node[1] != 0:
+    if current_node[1] != 0:
         adjacent_nodes.append([current_node[0], current_node[1] - 1])
 
     # On the bottom edge of the graph.
-    elif current_node[1] != height - 1:
+    if current_node[1] != height - 1:
         adjacent_nodes.append([current_node[0], current_node[1] + 1])
 
     # Shuffle the list so we dont get the same path every time.
