@@ -2,24 +2,24 @@
 # Includes |
 # ---------|
 
+# ---------
+# 3rd Party
+# ---------
+
+import random
+
+# ---------
+# Home made
+# ---------
+
 from lib.graph import Graph
 
 from src.solver import SP_Djikstras
+from src.generator import prims_maze_generator
 
 # -----|
 # Init |
 # -----|
-
-# We expect an uninitialized graph
-def prims(graph: Graph, start_vertex: int):
-    msp = Graph()
-
-    msp.add_vertex(start_vertex)
-
-    edges = graph.get_adjacent_vertices(start_vertex)
-
-    while len(graph.get_vertices()) > len(msp.get_vertices()):
-        ...
 
 
 test = Graph()

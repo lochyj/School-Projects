@@ -29,8 +29,11 @@ class Graph:
     
     # Add a vertex to the graph with the id of the 
     # length of the vertices list.
-    def add_vertex(self):
-        self.vertices.append(len(self.vertices))
+    def add_vertex(self, index=None):
+        if index == None:
+            index = len(self.vertices)
+        
+        self.vertices.append(index)
     
     def generate_graph(self, n_vertices):
         for i in range(n_vertices):
