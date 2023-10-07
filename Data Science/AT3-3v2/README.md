@@ -4,7 +4,7 @@ This totally didn't take, overall for both attempts, a total of 19 hours over th
 
 This is actually the second iteration of part 3, the original one can be found [here](https://github.com/lochyj/School-Projects/tree/b1582f62afe2f4f750f3ac5ae7a7be0832a7e219/Data%20Science/AT3-3)*
 
-\* It is an old commit as the newer versions don't work.
+\* It is an old commit as the newer versions don't work. This is the commit I used to display what my dfs generation algorithm looked like.
 
 If you want to view the nicely rendered version of this readme visit [here](https://github.com/lochyj/School-Projects/tree/main/Data%20Science/AT3-3v2)
 
@@ -15,7 +15,7 @@ The themes.json file is there to change the text colour of the UI_Label so you c
 ## The little grey square
 
 What is the grey square?
-Well, the square shown below is a cursor of sorts that i have added to help visualise the separation of the vertices of the graph from the edges, as that is how the maze is generated, through a graph.
+Well, the square shown below is a cursor of sorts that I have added to help visualise the separation of the vertices of the graph from the edges, as that is how the maze is generated, through a graph.
 
 |![Little grey square cursor](./images/little_grey_square.png)|
 |-|
@@ -29,13 +29,13 @@ There are artifacts occurring when the maze is being drawn (little gaps in the m
 
 ## Performance issues
 
-There is some performance issues with prims algorithm, this is, after no investigation, caused by the expansion of the edges list further into the generation of the maze. This slow down of the prims main loop is visible in the console for larger graphs where, at the end of each iteration we print the current iteration.
+There is some performance issues with prims algorithm, this is, after no investigation, caused by the expansion of the edges list further into the generation of the maze. This slow down of the prims main loop is visible in the console for larger graphs where, at the end of each iteration we print the current iteration. This starts to become a problem at a maze size of ~20x20.
 
 ## Design choices
 
 ### Why did I go with prims algorithm?
 
-In my first iteration i initially went with DFS, which if im being honest didn't look great as you can see below.
+In my first iteration I initially went with DFS, which if im being honest didn't look great as you can see below.
 
 So I had a look at the maze generation wikipedia page and saw [this](https://en.wikipedia.org/wiki/File:MAZE_30x20_Prim.ogv) video and decided I was going to generate the maze with prims algorithm.
 
