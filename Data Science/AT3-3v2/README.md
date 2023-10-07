@@ -1,5 +1,7 @@
 # Assessment Task 3 - 3
 
+This totally didn't take, overall for both attempts, a total of 19 hours over the past week...
+
 This is actually the second iteration of part 3, the original one can be found [here](https://github.com/lochyj/School-Projects/tree/b1582f62afe2f4f750f3ac5ae7a7be0832a7e219/Data%20Science/AT3-3)*
 
 \* It is an old commit as the newer versions don't work.
