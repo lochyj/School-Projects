@@ -1,30 +1,18 @@
 import random
 
 from lib.graph import Graph
+from src.generator import prims_maze_generator
+from src.solver import sp_djikstras
 
-# Maze is an extension of Graph and simply modifies the get_adjacent_vertices to give a random list of adjacent vertices
-class Maze(Graph):
-    def get_adjacent_vertices(self, vertex, width, height):
-        x = vertex % width
-        y = vertex // width
+def generate_new_maze(maze_size: list[int, int]):
 
-        adjacent = []
+    maze: Graph = prims_maze_generator(0, maze_size[0], maze_size[1])
 
-        if x != 0:
-            adjacent.append(vertex - 1)
+    print("Maze generated")
 
-        if x != width:
-            adjacent.append(vertex + 1)
+    shortest_path: list[int] = sp_djikstras(maze, 0, maze_size[0] * maze_size[1] - 1)
 
-        if y != 0:
-            adjacent.append(vertex - width)
-        
-        if y != height:
-            adjacent.append(vertex + width)
+    print("Shortest path found")
 
-        # Well, Well, Well, something went wildly wrong
-        if len(adjacent) == 0:
-            print("Something went wrong in Maze.get_adjacent_vertices")
-            exit(1)
+    return [maze, shortest_path]
 
-        return random.choice(adjacent)

@@ -10,10 +10,10 @@ from lib.queue import Queue
 # Public functions |
 # -----------------|
 
-# Shortest path djikstras
-# An implementation of djikstras algorithm adapted 
+# Shortest path dijkstra's
+# An implementation of dijkstra's algorithm adapted 
 # from https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
-def SP_Djikstras(graph: Graph, start_vertex: int, target_vertex: int):
+def sp_djikstras(graph: Graph, start_vertex: int, target_vertex: int):
     dist: list[int] = []
     prev: list[int] = []
 
@@ -43,8 +43,9 @@ def SP_Djikstras(graph: Graph, start_vertex: int, target_vertex: int):
 
                     S.append(u)
 
-                # Return the reversed path
-                return S[::-1]
+                print(S)
+
+                return S
 
         Q.remove()
 
@@ -56,4 +57,5 @@ def SP_Djikstras(graph: Graph, start_vertex: int, target_vertex: int):
                     dist[v] = alt
                     prev[v] = u
 
-    return None
+    print("Shortest path dijkstra's could not find a path")
+    exit(1)

@@ -63,9 +63,12 @@ class Graph:
                     self.connect(i, j)
     
     # TODO: make this less convoluted
-    # TODO: make this not return itself if its no connected to itself
     def get_adjacent_vertices(self, vertex):
         if self.directed:
             return [edge[1] for edge in self.edges if edge[0] == vertex]
         
         return [edge[1] for edge in self.edges if edge[0] == vertex or edge[1] == vertex]
+
+    # Same here...
+    def get_connected_edges(self, vertex):
+        return [edge for edge in self.edges if edge[0] == vertex or edge[1] == vertex]

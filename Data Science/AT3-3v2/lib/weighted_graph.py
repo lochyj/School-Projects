@@ -1,5 +1,8 @@
 from lib.graph import Graph
 
+# Weighted graph is an extension of the graph class, 
+# except it has an extra weight value for each edge 
+# and a few helper functions
 class WeightedGraph(Graph):
 
     # Invalidate the regular connect method
