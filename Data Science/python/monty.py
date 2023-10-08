@@ -12,12 +12,15 @@ def monty_hall():
 
 def main():
     results = []
-    for _ in range(1, 300000):
+    total = 100000000
+    for i in range(1, total):
         results.append(monty_hall())
-    switch = results.count(False)
-    stay = results.count(True)
+        print(f"Iter: {i}", end='\r')
+    loose = results.count(False)
+    win = results.count(True)
 
-    print(f"Switching wins: {switch}")
-    print(f"Staying wins: {stay}")
+    print(f"You won {win / total * 100}% of the time.")
+    print(f"You lost {loose / total * 100}% of the time.")
+
 
 main()

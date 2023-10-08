@@ -63,7 +63,7 @@ def get_minimum_weight(edges: list, visited: list):
 # https://wiki.python.org/moin/TimeComplexity
 def prims_maze_generator(start_vertex: int, width: int, height: int):
     maze: WeightedGraph = generate_max_maze(width, height)
-    
+
     mst = Graph()
 
     current_vertex = start_vertex
@@ -74,7 +74,7 @@ def prims_maze_generator(start_vertex: int, width: int, height: int):
 
     while len(mst.get_vertices()) < len(maze.get_vertices()):
         to_vertex, from_vertex = get_minimum_weight(edges, mst.get_vertices())
-        
+
         mst.add_vertex(to_vertex)
 
         mst.connect(from_vertex, to_vertex)
