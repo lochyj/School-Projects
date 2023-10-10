@@ -1,29 +1,51 @@
+import random
+
 rabbits = 100
-rabbit_birth = 1.1
-rabbit_death = 0.05
+wolves = 10
 
-rabbit_max = 1000
+total_generations = 5000
 
-wolves = 20
-wolf_birth = 1.1
-wolf_death = 0.05
+def gen_rabbits(out):
+    global rabbits
 
-wolf_kill = 0.9 # / wolf
+    # Breeding
+    rabbits *= 1.05
 
-total_generations = 51
+    # Death
+    rabbits /= 1.1
 
-for i in range(1, total_generations):
-    print() # \n
-    # Wolves
-    Nwolf_birth = wolf_birth * rabbits / wolves
-    dead_wolf = wolf_death * wolves
-    wolves = int(wolves * Nwolf_birth - dead_wolf)
-    print(f"wolves: {i}:{wolves}")
+    # Eaten
+    rabbits -= max(1 , wolves)
 
-    eaten_rabbit = wolves * wolf_kill
+    # Randomly joining the generation
+    rabbits += random.randint(0, 4)
 
-    # Rabbits
-    Nrabbit_birth = rabbit_birth * (1 - rabbits / rabbit_max)
-    dead_rabbit = rabbit_death * rabbits + eaten_rabbit
-    rabbits = int(rabbits * Nrabbit_birth - dead_rabbit)
-    print(f"rabbits: {i}:{rabbits}")
+    # We dont want to go under 1
+    rabbits = max(1, rabbits)
+
+    print(f"{rabbits},", file=out, end='')
+
+def gen_wolves(out):
+    global wolves
+
+    # Breeding
+    wolves *= 1.1 + (rabbits / (rabbits / 1.05)) / 100
+
+    # Deaths
+    wolves /= 1.004
+
+    # Deaths due to starvation
+    wolves /= 10 / max(1, abs(rabbits))
+
+    # We dont want to go under 1
+    wolves = max(1, wolves)
+
+    print(f"{wolves}", file=out)
+
+with open('squares.csv', 'w') as out:
+
+    for i in range(1, total_generations):
+        print(f"{i},", file=out, end='')
+        gen_rabbits(out)
+        gen_wolves(out)
+
