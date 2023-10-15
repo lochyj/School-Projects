@@ -81,15 +81,18 @@ def main():
     earth = Star(12500, Vec(210,0), Vec(0,195), gs, "planet")
     earth.pencolor("green")
     earth.shapesize(0.8)
-    moon = Star(1, Vec(220,0), Vec(0,295), gs, "planet")
+    moon = Star(5, Vec(220,0), Vec(0,295), gs, "planet")
     moon.pencolor("blue")
     moon.shapesize(0.5)
-    moon2 = Star(1, Vec(230,0), Vec(0,255), gs, "planet")
+    moon2 = Star(5, Vec(200,0), Vec(0,295), gs, "planet")
     moon2.pencolor("pink")
     moon2.shapesize(0.5)
     gs.init()
     gs.start()
-    return "Done!"
+    gs.init()
+    gs.start()
+    gs.init()
+    gs.start()
 
 if __name__ == '__main__':
     msg = main()
