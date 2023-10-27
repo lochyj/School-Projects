@@ -13,6 +13,7 @@ class Actor:
     infection_duration = 0
 
     socialization_rate = 20 # The default socialization rate.
+    interacted_with = 0
 
     interactions = [0, 0, 0]
     
@@ -31,8 +32,14 @@ class Actor:
             self.infected = False
             self.infected_time = 0
             self.infection_duration = 0
+        
+        self.interacted_with = 0
     
     def socialize(self, actor):
+
+        if self.interacted_with >= self.socialization_rate:
+            return
+
         if actor.is_infected():
             if random.random() < ALPHA:
                 self.infect()
@@ -42,12 +49,16 @@ class Actor:
             self.interactions[UNINFECTED] += 1
 
         self.interactions[TOTAL] += 1
+        self.interacted_with += 1
     
     def is_infected(self):
         return self.infected
 
     def get_sociality(self):
         return self.socialization_rate
+
+    def get_interacted(self):
+        return self.interacted_with
     
     def get_interactions(self):
         return self.interactions
