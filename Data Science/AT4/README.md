@@ -14,7 +14,7 @@ As this requires what is essentially finding the interest rate of
 the balance of the initial population over the time period of 29 days
 that compounds to lead to the final amount, we need mathematica.
 To estimate the value, we of course need the formula for compound interest:
-`A=P(1+r/n)^(nt)`
+`A = P(1+r/n)^(nt)`
 where in our case, A = 12741386, P = 7769783, r is unknown, n is 1 and t is 29.
 n can also be 29, where t is 1 but I chose t to be the counter for the number of days.
 

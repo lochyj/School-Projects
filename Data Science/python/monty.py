@@ -7,12 +7,12 @@ def monty_hall():
 
     if choice == car:
         return True
-    else:
-        return False
+
+    return False
 
 def main():
     results = []
-    total = 100000000
+    total = 1000000
     for i in range(1, total):
         results.append(monty_hall())
         print(f"Iter: {i}", end='\r')

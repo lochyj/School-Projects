@@ -10,7 +10,6 @@ import os
 
 import pygame
 
-import pygame_gui
 from pygame_gui.elements import UIButton, UILabel
 from pygame_gui import UI_BUTTON_PRESSED
 
