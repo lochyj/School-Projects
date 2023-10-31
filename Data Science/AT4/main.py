@@ -1,3 +1,4 @@
+# A poorly commented attempt at a somewhat realistic covid-19 simulation
 
 # --------|
 # Imports |
@@ -10,20 +11,21 @@ from src.constant import *
 # Code |
 # -----|
 
-days = 209 # 209, 29
-
-breakdown = [] # current cases, total infected, population, deaths, recovered
-
-deltas = []
-
-infected = 7769783
+days        = 209 # The days between 8/6/2020 and the end of the 2020 year, 31/12/2020
+breakdown   = [] # current cases, total infected, population, deaths, recovered. The indexes are defined in constants.py
+deltas      = []
+infected    = 7769783
 
 INITIAL_INFECTIONS = infected
 
-population = BEGINNING_POPULATION - INITIAL_INFECTIONS
+population  = BEGINNING_POPULATION - INITIAL_INFECTIONS
 
-def do_infections(day):
-    global infected
+# -----------------|
+# Helper functions |
+# -----------------|
+
+def do_infections():
+    global infected # God i hate python's scope handling
 
     # We divide R by 2.2 because it makes the results look good
     infected = int(
@@ -72,6 +74,10 @@ def do_recover(day):
 def generate_r():
     return random.uniform(1.4, 2.6)
 
+# -------------------|
+# Init and Main Loop |
+# -------------------|
+
 r_value = generate_r()
 
 for day in range(days):
@@ -84,7 +90,7 @@ for day in range(days):
     delta = get_delta(day)
 
     deaths = do_deaths(day)
-    delta -= deaths
+    delta -= deaths # Remove the deaths from the delta
 
     r_value = generate_r()
 
@@ -98,6 +104,7 @@ for day in range(days):
 
     deltas.append(delta)
 
+    # Add some data points to the breakdown. (stuff to put on a graph)
     breakdown[day][CASES] = infected
     breakdown[day][POPULATION] = population
 
@@ -106,7 +113,11 @@ for day in range(days):
     else:
         breakdown[day][TOTAL] = delta + INITIAL_INFECTIONS
 
-with open("./out/out.csv", 'w') as f:
-    print("Current Cases, Total Cases, Non-Infected Population, Deaths, Recoveries", file=f)
+
+with open("./out/out.csv", 'w') as file:
+
+    print("Current Cases, Total Cases, Non-Infected Population, Deaths, Recoveries", file=file)
+
     for day in breakdown:
-        print(f"{day[CASES]}, {day[TOTAL]}, {day[POPULATION]}, {day[DEATH]}, {day[RECOVERED]}", file=f)
+
+        print(f"{day[CASES]}, {day[TOTAL]}, {day[POPULATION]}, {day[DEATH]}, {day[RECOVERED]}", file=file)
