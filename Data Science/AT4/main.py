@@ -10,56 +10,103 @@ from src.constant import *
 # Code |
 # -----|
 
-days = 2009 # 209, 29
+days = 209 # 209, 29
 
 breakdown = [] # current cases, total infected, population, deaths, recovered
 
-deltas = [12, 53, 74, 32, 75, 25, 82, 53]
+deltas = []
 
 infected = 7769783
-#infected = 1000
 
-population = POPULATION - infected
+INITIAL_INFECTIONS = infected
 
-r_value = random.uniform(1.4, 2.6)
+population = BEGINNING_POPULATION - INITIAL_INFECTIONS
 
-breakdown.append(infected)
+def do_infections(day):
+    global infected
 
-total = [infected]
+    # We divide R by 2.2 because it makes the results look good
+    infected = int(
+        infected * max(1, r_value / 2.2) 
+    )
 
-for i in range(days):
+def get_delta(day):
+    global infected
 
-    # New infections
-    infected = int(infected * max(1, r_value / 2.2)) # This is half of the average time to infection, 4.2 is the actual value but it was too high...
+    if day == 0:
+        return infected - INITIAL_INFECTIONS
 
-    # New infections on the day "i"
-    delta = infected - breakdown[i]
+    return infected - breakdown[day - 1][CASES]
 
-    population -= delta
+def do_deaths(day):
+    global population
+    global infected
 
-    # Deaths handling
-    deaths = int(delta * DEATH_RATE)
-    delta -= deaths
-    infected -= deaths
+    deaths = infected * DEATH_RATE
+    population -= deaths
 
-    r_value = random.uniform(1.4, 2.6)
+    breakdown[day][DEATH] = deaths
 
-    total.append(total[i] + delta)
+    return deaths
 
-    deltas.append(delta)
+def do_recover(day):
+    global deltas
+    global infected
+    global population
 
     if len(deltas) >= random.randint(10, 21):
         recovered = deltas.pop(0)
+
+        if recovered <= 0: # Sometimes we have a negative delta...
+            return 0
+
         infected -= recovered
         population += recovered
 
-    breakdown.append(infected)
-    print([delta, infected])
+        breakdown[day][RECOVERED] = recovered
 
-with open("./out/recovery.csv", 'w') as f:
-    for i in breakdown:
-        print(i, file=f)
+        return recovered
 
-with open("./out/extended_recovery.csv", 'w') as f:
-    for i in total:
-        print(i, file=f)
+    return 0
+
+def generate_r():
+    return random.uniform(1.4, 2.6)
+
+r_value = generate_r()
+
+for day in range(days):
+
+    breakdown.append([0, 0, 0, 0, 0]) # Initialise the day's data
+
+    do_infections(day)
+
+    # New infection for day "day"
+    delta = get_delta(day)
+
+    deaths = do_deaths(day)
+    delta -= deaths
+
+    r_value = generate_r()
+
+    recoveries = do_recover(day)
+
+    population -= delta
+
+    if population <= 0:
+        delta += population
+        infected += population
+
+    deltas.append(delta)
+
+    breakdown[day][CASES] = infected
+    breakdown[day][POPULATION] = population
+
+    if day != 0:
+        breakdown[day][TOTAL] = delta + breakdown[day - 1][TOTAL]
+    else:
+        breakdown[day][TOTAL] = delta + INITIAL_INFECTIONS
+
+with open("./out/out.csv", 'w') as f:
+    print("Current Cases, Total Cases, Non-Infected Population, Deaths, Recoveries", file=f)
+    for day in breakdown:
+        print(f"{day[CASES]}, {day[TOTAL]}, {day[POPULATION]}, {day[DEATH]}, {day[RECOVERED]}", file=f)
