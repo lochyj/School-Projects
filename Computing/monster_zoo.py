@@ -15,6 +15,7 @@ class Date:
 
     def checkValid(self) -> bool:
         try:
+            # This is the easy way of checking if a date is valid
             datetime.datetime(year=self.year, month=self.month, day=self.day)
             return True
         except:
@@ -23,13 +24,19 @@ class Date:
     def isLeapYear(year: int):
         return calendar.isleap(year)
 
-    def daysInMonth(self, month: int) -> int:
-        return calendar.monthrange(2000, month)[1]
+    def daysInMonth(self, month: int) -> int | None:
+        try:
+            return calendar.monthrange(2000, month)[1] # Returns a tuple with (<something useless>, <days in month>)
+        except:
+            return None
 
 class Food:
     def __init__(self, name: str, servingSize: float):
         self.name: str = name
         self.servingSize: float = servingSize
+
+    def __str__(self) -> str:
+        self.print()
 
     def print(self):
         print("- Food -")
@@ -49,9 +56,12 @@ class Monster:
         self.personality = "Angry"
 
     def eat(self, serves: int) -> float:
+
         serving_size = self.favouriteFood.servingSize
-        consumed_food = serving_size * serves
-        self.amountEaten += consumed_food
+
+        consumed_food = serving_size * serves # Get the amount of food in kgs that the monster will eat
+        self.amountEaten += consumed_food # Add the amount to total eaten
+
         return consumed_food
 
     def looseLimb(self) -> bool:
@@ -67,6 +77,9 @@ class Monster:
             return True
 
         return False
+
+    def __str__(self) -> str:
+        self.print()
 
     def print(self):
         print("---------")
@@ -100,21 +113,23 @@ class Zoo:
         return True
 
     def find(self, name: str) -> int | None:
+        # Iterate over each monster and check if the monster has the name we are looking for.
+        # Suppose we done have multiple monsters with the same name
         for i, monster in enumerate(self.monsters):
             if monster.name == name:
                 return i
         return None
 
     def printMonster(self, name: str):
-        idx = self.find(name)
+        idx = self.find(name) # Get the index of the monster with the name <name>
         if idx == None:
-            print(f"Could not find monster '{name}'")
+            print(f"Could not find monster '{name}'") # Uhhhhhh... This is awkward
 
         monster = self.monsters[idx]
 
         monster.print()
 
-    # Removes the monster from the zoo
+    # Removes and returns the monster from the zoo
     def getMonster(self, idx: int) -> Monster | None:
         if idx > self.numMonsters:
             return None
@@ -125,9 +140,16 @@ class Zoo:
 
         return monster
 
+    def __str__(self) -> str:
+        self.printAllMonsters()
+
     def printAllMonsters(self):
         for monster in self.monsters:
             monster.print()
+
+# --------|
+# Testing |:
+# --------|
 
 zoo = Zoo()
 
@@ -141,8 +163,9 @@ print(zoo.find("Bob")) # -> 0
 Jim = zoo.getMonster(zoo.find("Jim"))
 Jim.name = "Uh Oh"
 
+print(f"Does jim have a real birthday? {Jim.birthday.checkValid()}")
+
 zoo.add(Jim)
 
+del Jim
 zoo.printMonster("Uh Oh")
-
-print(f"Does jim have a real birthday? {Jim.birthday.checkValid()}")
