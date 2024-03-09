@@ -15,4 +15,57 @@
 # Another option would be to shift all elements over but this is really
 # compute intensive and wastes precious cpu cycles :)
 
+class Element:
+    def __init__(self) -> None:
+        self.left = None
+        self.right = None
+        self.up = None
+        self.down = None
+        self.value = None
 
+
+
+class Matrix:
+    def __init__(self, columns, rows) -> None:
+        self.width = columns
+        self.height = rows
+
+        self.matrix: list[list[Element]] = [[Element() for _ in range(self.width)] for _ in range(self.height)]
+
+        for row in range(rows):
+            for col in range(columns):
+                l: Element | None = None
+                r: Element | None = None
+                u: Element | None = None
+                d: Element | None = None
+
+                if row != 0 and row != self.width:
+                    u = self.matrix[row - 1][col]
+
+                if row <= rows - 2:
+                    d = self.matrix[row + 1][col]
+
+                if col != 0:
+                    l = self.matrix[row][col - 1]
+
+                if col <= columns - 2:
+                    r = self.matrix[row][col + 1]
+
+                el: Element = self.matrix[row][col]
+                el.left = l
+                el.right = r
+                el.up = u
+                el.down = d
+
+                self.matrix[row][col] = el
+
+matrix = Matrix(5, 3)
+
+el = matrix.matrix[0][0]
+
+print(el.left) # -> None
+print(el.right) # -> Element
+print(el.right.right) # -> Element
+print(el.right.right.right) # -> Element
+print(el.right.right.right.right) # -> Element
+print(el.right.right.right.right.right) # -> None
