@@ -21,16 +21,22 @@ class Element:
         self.right = None
         self.up = None
         self.down = None
-        self.value = None
 
+
+class Header:
+    def __init__(self) -> None:
+        self.left = None
+        self.right = None
+        self.up = None
+        self.down = None
 
 
 class Matrix:
-    def __init__(self, columns, rows) -> None:
+    def __init__(self, rows, columns) -> None:
         self.width = columns
         self.height = rows
 
-        self.matrix: list[list[Element]] = [[Element() for _ in range(self.width)] for _ in range(self.height)]
+        self.matrix: list[list[Element]] = [[Element() for _ in range(self.height)] for _ in range(self.width)]
 
         for row in range(rows):
             for col in range(columns):
@@ -40,32 +46,39 @@ class Matrix:
                 d: Element | None = None
 
                 if row != 0 and row != self.width:
-                    u = self.matrix[row - 1][col]
+                    u = self.matrix[col][row - 1]
 
                 if row <= rows - 2:
-                    d = self.matrix[row + 1][col]
+                    d = self.matrix[col][row + 1]
 
                 if col != 0:
-                    l = self.matrix[row][col - 1]
+                    l = self.matrix[col - 1][row]
 
                 if col <= columns - 2:
-                    r = self.matrix[row][col + 1]
+                    r = self.matrix[col + 1][row]
 
-                el: Element = self.matrix[row][col]
+                el: Element = self.matrix[col][row]
                 el.left = l
                 el.right = r
                 el.up = u
                 el.down = d
 
-                self.matrix[row][col] = el
+                self.matrix[col][row] = el
 
-matrix = Matrix(5, 3)
+matrix = Matrix(1568, 72)
 
-el = matrix.matrix[0][0]
+# The first 12 columns of the matrix are for each of the 12 pentominoes.
+F = matrix.matrix[0]
+I = matrix.matrix[1]
+L = matrix.matrix[2]
+P = matrix.matrix[3]
+N = matrix.matrix[4]
+T = matrix.matrix[5]
+U = matrix.matrix[6]
+V = matrix.matrix[7]
+W = matrix.matrix[8]
+X = matrix.matrix[9]
+Y = matrix.matrix[10]
+Z = matrix.matrix[11]
 
-print(el.left) # -> None
-print(el.right) # -> Element
-print(el.right.right) # -> Element
-print(el.right.right.right) # -> Element
-print(el.right.right.right.right) # -> Element
-print(el.right.right.right.right.right) # -> None
+
