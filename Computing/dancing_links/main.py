@@ -15,16 +15,16 @@
 # Another option would be to shift all elements over but this is really
 # compute intensive and wastes precious cpu cycles :)
 
-class Element:
+class Header:
     def __init__(self) -> None:
         self.left = None
         self.right = None
         self.up = None
         self.down = None
 
-
-class Header:
+class Element:
     def __init__(self) -> None:
+        self.header: Header = None
         self.left = None
         self.right = None
         self.up = None
@@ -34,16 +34,21 @@ class Header:
 class Matrix:
     def __init__(self, rows, columns) -> None:
         self.width = columns
-        self.height = rows
+        self.height = rows + 1
 
-        self.matrix: list[list[Element]] = [[Element() for _ in range(self.height)] for _ in range(self.width)]
+        self.matrix: list[list[Element | Header]] = [[Element() for _ in range(self.height)] for _ in range(self.width)]
 
         for row in range(rows):
             for col in range(columns):
-                l: Element | None = None
-                r: Element | None = None
-                u: Element | None = None
-                d: Element | None = None
+
+                if row == 0:
+                    header = Header()
+                    self.matrix[col][row] = header
+
+                l: Element | Header | None = None
+                r: Element | Header | None = None
+                u: Element | Header | None = None
+                d: Element | Header | None = None
 
                 if row != 0 and row != self.width:
                     u = self.matrix[col][row - 1]
@@ -57,7 +62,7 @@ class Matrix:
                 if col <= columns - 2:
                     r = self.matrix[col + 1][row]
 
-                el: Element = self.matrix[col][row]
+                el: Element | Header = self.matrix[col][row]
                 el.left = l
                 el.right = r
                 el.up = u
