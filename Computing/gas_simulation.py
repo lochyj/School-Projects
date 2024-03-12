@@ -37,8 +37,8 @@ class Particle:
 
     def get_random_velocity(self) -> list[float, float]:
         return [
-            (random.random() - 0.5) * 20,
-            (random.random() - 0.5) * 20
+            (random.random() - 0.5) * 10,
+            (random.random() - 0.5) * 10
         ]
 
     def get_random_pos(self) -> list[int]:

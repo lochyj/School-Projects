@@ -15,6 +15,10 @@
 # Another option would be to shift all elements over but this is really
 # compute intensive and wastes precious cpu cycles :)
 
+# --------|
+# Classes |
+# --------|
+
 class Header:
     def __init__(self) -> None:
         self.left = None
@@ -43,7 +47,7 @@ class Matrix:
 
                 if row == 0:
                     header = Header()
-                    self.matrix[col][row] = header
+                    self.matrix[col][0] = header
 
                 l: Element | Header | None = None
                 r: Element | Header | None = None
@@ -68,7 +72,14 @@ class Matrix:
                 el.up = u
                 el.down = d
 
+                if row != 0:
+                    el.header = self.matrix[columns][0]
+
                 self.matrix[col][row] = el
+
+# -----|
+# Init |
+# -----|
 
 matrix = Matrix(1568, 72)
 
