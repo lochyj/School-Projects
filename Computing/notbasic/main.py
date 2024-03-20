@@ -1,11 +1,29 @@
+import sys
+
 from src.parse import parse
 from src.execute import Program, Operation
+from src.input import get_user_in
+
+def open_file(file_path):
+    lines = []
+
+    with open(file_path, 'r') as file:
+        lines = [line.rstrip() for line in file]
+
+    return lines
 
 def main():
-
     program = Program()
 
-    parsed_lines = parse("./Computing/notbasic/test.nob")
+    file: any = None
+
+    try:
+        # TODO: use argparse instead
+        file = open_file(sys.argv[1])
+    except:
+        file = get_user_in()
+
+    parsed_lines = parse(file)
 
     for line in parsed_lines:
         op = Operation(program)

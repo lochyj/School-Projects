@@ -1,9 +1,4 @@
-def parse(file_path):
-
-    lines = []
-
-    with open(file_path, 'r') as file:
-        lines = [line.rstrip() for line in file]
+def parse(lines):
 
     parsed_lines = []
 
