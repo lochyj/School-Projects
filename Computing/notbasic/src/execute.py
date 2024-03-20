@@ -54,8 +54,6 @@ class Program:
 
             op = self.get_next_operation_by_line(op.line)
 
-
-
 class Operation:
     def __init__(self, program) -> None:
         self.line: int = 0
