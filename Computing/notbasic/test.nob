@@ -1,0 +1,3 @@
+10 add 100 200
+20 store 10 test
+30 print test
