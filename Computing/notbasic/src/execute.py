@@ -79,14 +79,20 @@ class Operation:
             case "sub":
                 return self.VM.sub()
 
+            case "mul":
+                return self.VM.mul()
+
+            case "div":
+                return self.VM.div()
+
             case "store":
                 return self.VM.store()
 
             case "conf":
                 return self.VM.conf()
 
-            case "value":
-                return self.VM.value()
+            case "var":
+                return self.VM.var()
 
             case "inc":
                 return self.VM.inc()

@@ -127,7 +127,12 @@ class Analyzer:
                 print(params)
                 exit()
 
-            line_num = params[0].value
+            try:
+                line_num = params[0].value
+            except:
+                # The line doesn't have a line number
+                print("ERROR: No line number is present!")
+                exit()
             operator = params[1].name
 
             params.pop(0); params.pop(0)

@@ -9,7 +9,7 @@
 50 conf "width" ; Gets the character width of the terminal
 60 store 50 terminal_width ; Stores the character width of the terminal in the variable terminal_width
 
-65 value 20 i ; Stores the number value '20' in the variable i
+65 var i 20 ; Stores the number value '20' in the variable i
 70 print i
 75 dec i ; Decreases the value of i by one
 76 store 75 i

@@ -104,6 +104,87 @@ class VM:
         self.operation.output = Integer(a - b)
         return None
 
+    def mul(self):
+
+        param1 = self.operation.params[0]
+        param2 = self.operation.params[1]
+
+        if isinstance(param1, String) or isinstance(param2, String):
+            self.program.error("Cannot subtract Strings", self.operation)
+
+        a: int = 0
+        b: int = 0
+        if isinstance(param1, Integer):
+            a = param1.value
+        else:
+            a = self.program.get_variable(param1.name, self)
+            if isinstance(a, String):
+                self.program.error("Cannot subtract Strings", self.operation)
+            a = a.value
+
+        if isinstance(param2, Integer):
+            b = param2.value
+        else:
+            b = self.program.get_variable(param2.name, self)
+            if isinstance(b, String):
+                self.program.error("Cannot subtract Strings", self.operation)
+            b = b.value
+
+        if isinstance(a, String) or isinstance(b, String):
+            self.program.error("Cannot subtract Strings", self.operation)
+
+        # Just to be sure. TODO: Verify that we don't need this...
+        try:
+            a = int(a)
+            b = int(b)
+        except:
+            ...
+
+        self.operation.output = Integer(a * b)
+        return None
+
+    def div(self):
+
+        param1 = self.operation.params[0]
+        param2 = self.operation.params[1]
+
+        if isinstance(param1, String) or isinstance(param2, String):
+            self.program.error("Cannot subtract Strings", self.operation)
+
+        a: int = 0
+        b: int = 0
+        if isinstance(param1, Integer):
+            a = param1.value
+        else:
+            a = self.program.get_variable(param1.name, self)
+            if isinstance(a, String):
+                self.program.error("Cannot subtract Strings", self.operation)
+            a = a.value
+
+        if isinstance(param2, Integer):
+            b = param2.value
+        else:
+            b = self.program.get_variable(param2.name, self)
+            if isinstance(b, String):
+                self.program.error("Cannot subtract Strings", self.operation)
+            b = b.value
+
+        if isinstance(a, String) or isinstance(b, String):
+            self.program.error("Cannot subtract Strings", self.operation)
+
+        # Just to be sure. TODO: Verify that we don't need this...
+        try:
+            a = int(a)
+            b = int(b)
+        except:
+            ...
+
+        if b == 0:
+            self.program.error("Cannot divide a number by 0", self.operation)
+
+        self.operation.output = Integer(a / b)
+        return None
+
     def store(self):
 
         if len(self.operation.params) != 2:
@@ -135,7 +216,7 @@ class VM:
             self.program.error(f"An unknown error occurred with the operating system or operating environment", self.operation)
         return None
 
-    def value(self):
+    def var(self):
 
         if len(self.operation.params) != 2:
             ... # TODO: Throw warning or error.
@@ -143,16 +224,16 @@ class VM:
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
-        name = param2
+        name = param1
         value: any = None
 
-        if isinstance(param1, Variable):
-            value = self.program.get_variable(param1.name, self)
-        else:
-            value = param1
-
         if isinstance(param2, Variable):
-            name = param2.name
+            value = self.program.get_variable(param2.name, self)
+        else:
+            value = param2
+
+        if isinstance(param1, Variable):
+            name = param1.name
 
         self.program.set_variable(name, value)
         return None
@@ -249,4 +330,4 @@ class VM:
         if not isinstance(param2, Integer) or self.program.get_operation_by_line(param2.value) == None:
             self.program.error(f"Line {param2} cannot be found", self.operation)
 
-        return param2
+        return param2.value
