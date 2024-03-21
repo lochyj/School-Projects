@@ -7,6 +7,5 @@ class Integer:
         self.value: int = value
 
 class Variable:
-    def __init__(self, name, value) -> None:
+    def __init__(self, name) -> None:
         self.name: str = name
-        self.value: any = value

@@ -63,6 +63,15 @@ class Analyzer:
 
         return lines
 
+    def classify_param(self, param: str, is_string):
+        if is_string:
+            return String(param)
+
+        if param.isdigit():
+            return Integer(param)
+
+        return Variable(param)
+
     def bind_lines(self, lines):
         bound_lines = []
 
@@ -78,23 +87,31 @@ class Analyzer:
                         if reading_string:
                             word += character
                         else:
-                            bound_line.append(word)
+                            bound_line.append(self.classify_param(word, False))
                             word = ""
+
                     case '\"':
                         if reading_string:
                             if j > 1:
                                 if line[j - 1] == '\\':
-                                    ...
+                                    word += '\"'
                                 else:
-                                    ... # EoS
+                                    bound_line.append(self.classify_param(word, True))
+                                    word = ""
                             else:
-                                ... # EoS
+                                bound_line.append(self.classify_param(word, True))
+                                word = ""
 
                         else:
-                            ...
+                            reading_string = True
 
+                    case _:
+                        word += character
 
+            bound_line.append(self.classify_param(word, reading_string))
             bound_lines.append(bound_line)
+
+        return bound_lines
 
     def parse(self, lines):
 
@@ -106,10 +123,12 @@ class Analyzer:
 
         for params in lines:
             if len(params) < 3:
-                print("")
+                print("ERROR: Line doesn't have enough parameters.")
+                print(params)
+                exit()
 
-            line_num = params[0]
-            operator = params[1]
+            line_num = params[0].value
+            operator = params[1].name
 
             params.pop(0); params.pop(0)
 

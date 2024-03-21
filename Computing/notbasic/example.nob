@@ -6,12 +6,13 @@
 20 add 10 20 ; adds the numbers 10 and 20
 30 store 20 hello ; Stores the value line 20 outputs as the variable hello
 40 print hello ; Prints the value of the variable hello.
-;50 conf width ; Gets the character width of the terminal
-;60 store 50 terminal_width ; Stores the character width of the terminal in the variable terminal_width
+50 conf "width" ; Gets the character width of the terminal
+60 store 50 terminal_width ; Stores the character width of the terminal in the variable terminal_width
 
 65 value 20 i ; Stores the number value '20' in the variable i
 70 print i
 75 dec i ; Decreases the value of i by one
+76 store 75 i
 80 jnz i 70 ; If the value of i doesn't equal 0, then jump to line 70
 
 eof ; Indicates the end of the file

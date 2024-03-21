@@ -1,4 +1,5 @@
-import os
+from src.vm import VM
+from src.types import *
 
 class Program:
     def __init__(self) -> None:
@@ -26,6 +27,8 @@ class Program:
         for operation in self.operations:
             if operation.line == line_no:
                 return operation
+
+        return None
 
     def get_next_operation_by_line(self, line_no):
         for i, operation in enumerate(self.operations):
@@ -58,135 +61,41 @@ class Operation:
     def __init__(self, program) -> None:
         self.line: int = 0
         self.operation: str = ""
-        self.params: list[str] = ""
+        self.params: list[str] = []
+
         self.output: any = None
+
         self.program: Program = program
+        self.VM: VM = VM(self, self.program)
 
     def execute(self) -> int | None: # Returns the line number to jump to or
         match self.operation:
             case "print":
-                if isinstance(self.params[0], tuple):
-                    print(self.params[0][1])
-                    return None
+                return self.VM.print()
 
-                if self.params[0].isdigit():
-                    print(self.params[0])
-                    return None
-
-                var_val = self.program.get_variable(self.params[0], self)
-                print(var_val)
-                return None
             case "add":
-                a: int = 0
-                b: int = 0
-                if self.params[0].isdigit():
-                    a = self.params[0]
-                else:
-                    a = self.program.get_variable(self.params[0], self)
-
-                if self.params[1].isdigit():
-                    b = self.params[1]
-                else:
-                    b = self.program.get_variable(self.params[1], self)
-
-                a = int(a)
-                b = int(b)
-
-                self.output = a + b
-                return None
+                return self.VM.add()
 
             case "sub":
-                a: int = 0
-                b: int = 0
-                if self.params[0].isdigit():
-                    a = self.params[0]
-                else:
-                    a = self.program.get_variable(self.params[0], self)
-
-                if self.params[1].isdigit():
-                    b = self.params[1]
-                else:
-                    b = self.program.get_variable(self.params[1], self)
-
-                a = int(a)
-                b = int(b)
-
-
-                self.output = a - b
-                return None
+                return self.VM.sub()
 
             case "store":
-                value = self.program.get_operation_by_line(self.params[0]).output
-                self.program.set_variable(self.params[1], value)
-                return None
+                return self.VM.store()
 
             case "conf":
-                try:
-                    match self.params[0]:
-                        case "width":
-                            self.value = os.get_terminal_size()[0]
-                        case "height":
-                            self.value = os.get_terminal_size()[1]
-                        case "os":
-                            self.value = os.name
-                        case _:
-                            self.program.error(f"Unknown config option \"{self.params[0]}\"", self)
-                except:
-                    self.program.error(f"An unknown error occurred with the operating system", self)
-                return None
+                return self.VM.conf()
 
             case "value":
-                value: any = None
-
-                if isinstance(self.params[0], tuple):
-                    value = self.params[0][1]
-                elif self.params[0].isdigit():
-                    value = self.params[0]
-                else:
-                    value = self.program.get_variable(self.params[0], self)
-
-                self.program.set_variable(self.params[1], self.params[0])
-                return None
-
-            case "dec":
-                a: int = 0
-                if self.params[0].isdigit():
-                    a = self.params[0]
-                else:
-                    a = self.program.get_variable(self.params[0], self)
-
-                a = int(a)
-                a -= 1
-
-                self.program.set_variable(self.params[0], a)
-                return None
+                return self.VM.value()
 
             case "inc":
-                a: int = 0
-                if self.params[0].isdigit():
-                    a = self.params[0]
-                else:
-                    a = self.program.get_variable(self.params[0], self)
+                return self.VM.inc()
 
-                a = int(a)
-                a += 1
-
-                self.program.set_variable(self.params[0], a)
-                return None
+            case "dec":
+                return self.VM.dec()
 
             case "jnz":
-                a: any = None
-                if self.params[0].isdigit():
-                    a = self.params[0]
-                else:
-                    a = self.program.get_variable(self.params[0], self)
-
-                a = int(a)
-
-                if a == 0:
-                    return None
-
-                return self.params[1]
+                return self.VM.jnz()
 
             case _:
                 self.program.error(f"Unknown operation \"{self.operation}\"", self)
