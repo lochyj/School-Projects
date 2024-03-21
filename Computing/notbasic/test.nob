@@ -1,4 +1,0 @@
-10 add 100 200 ; Hello
-; Hello
-20 store 10 test
-30 print test
