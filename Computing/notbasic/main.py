@@ -1,6 +1,6 @@
 import sys
 
-from src.parse import parse
+from src.parse import Analyzer
 from src.execute import Program, Operation
 from src.input import get_user_in
 
@@ -14,6 +14,7 @@ def open_file(file_path):
 
 def main():
     program = Program()
+    analyzer = Analyzer()
 
     file: any = None
 
@@ -23,7 +24,7 @@ def main():
     except:
         file = get_user_in()
 
-    parsed_lines = parse(file)
+    parsed_lines = analyzer.parse(file)
 
     for line in parsed_lines:
         op = Operation(program)

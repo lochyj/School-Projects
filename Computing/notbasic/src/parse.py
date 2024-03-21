@@ -1,67 +1,120 @@
-def parse(lines):
+from src.types import *
 
-    parsed_lines = []
+class Analyzer:
+    def __init__(self) -> None:
+        self.lexicon = {
+            "operations": [
+                "print",
+                "add",
+                "sub",
+                "store",
+                "conf",
+                "value",
+                "dec",
+                "inc",
+                "jnz"
+            ],
+            "values": [
+                "true",
+                "false"
+            ],
+            "terminators": [
+                "eof"
+            ]
+        }
 
-    for line in lines:
+    def extract_type(self, object):
+        ...
 
-        if line == '':
-            continue
+    def strip_comments(self, lines: list[str]):
+        for i, line in enumerate(lines):
+            if ';' in line:
+                cut_index: any = None
+                for j, character in enumerate(line):
+                    if character == ';':
+                        cut_index = j
+                        break
 
-        if line.startswith(';'):
-            continue
+                if cut_index != None:
+                    lines[i] = line[0:cut_index].strip()
+                else:
+                    ... # Something went terribly wrong...
 
-        line = line.strip()
-        split_line = line.split(' ')
-        line_num = split_line[0]
-        operator = split_line[1]
+        return lines
 
-        if (operator == ';'):
-            continue
+    def remove_blank_lines(self, lines: list[str]):
+        index = 0
 
-        split_line.pop(0); split_line.pop(0)
+        blank_words = [
+            '',
+            '\n',
+            '\r',
+            "\r\n",
+            "eof",
+        ]
 
-        reading_string = False
-        string = ""
+        while index < len(lines):
+            line = lines[index]
+            if line in blank_words:
+                lines.pop(index)
+                index -= 1
 
-        params = []
+            index += 1
 
-        for param in split_line:
+        return lines
 
-            if param.startswith(';') or param == ';':
-                break
+    def bind_lines(self, lines):
+        bound_lines = []
 
-            if param.startswith('\"'):
-                reading_string = True
-                param.removeprefix('\"')
+        for i, line in enumerate(lines):
+            reading_string = False
+            word = ""
+            bound_line = []
 
-                if param.endswith('\"'):
-                    param.removeprefix('\"')
-                    string += f"{param}"
+            for j, character in enumerate(line):
 
-                    params.append(("str", string))
+                match character:
+                    case ' ':
+                        if reading_string:
+                            word += character
+                        else:
+                            bound_line.append(word)
+                            word = ""
+                    case '\"':
+                        if reading_string:
+                            if j > 1:
+                                if line[j - 1] == '\\':
+                                    ...
+                                else:
+                                    ... # EoS
+                            else:
+                                ... # EoS
 
-                    reading_string = False
-                    string = ""
-                    continue
-
-                string += f"{param} "
-                continue
-
-            if reading_string and param.endswith('\"'):
-                param.removeprefix('\"')
-                string += f"{param}"
-
-                params.append(("str", string))
-
-                reading_string = False
-                string = ""
-                continue
-
-            params.append(param)
+                        else:
+                            ...
 
 
+            bound_lines.append(bound_line)
 
-        # line_num: int, operator: str, params: list[str]
-        parsed_lines.append((line_num, operator, params))
+    def parse(self, lines):
 
-    return parsed_lines
+        lines = self.strip_comments(lines)
+        lines = self.remove_blank_lines(lines)
+        lines = self.bind_lines(lines)
+
+        parsed_lines = []
+
+        for params in lines:
+            if len(params) < 3:
+                print("")
+
+            line_num = params[0]
+            operator = params[1]
+
+            params.pop(0); params.pop(0)
+
+
+            # line_num: int, operator: str, params: list[str]
+            parsed_lines.append((line_num, operator, params))
+
+        return parsed_lines
