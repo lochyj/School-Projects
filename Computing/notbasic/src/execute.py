@@ -7,16 +7,16 @@ class Program:
         self.variables: dict = {}
 
     def get_variable(self, var, operation):
-        if var not in self.variables.keys():
-            self.error(f"Variable \"{var}\" not found", operation)
+        if var.name not in self.variables.keys():
+            self.error(f"Variable \"{var.name}\" not found", operation)
 
-        return self.variables[var]
+        return self.variables[var.name]
 
     def set_variable(self, var, value):
-        if var not in self.variables.keys():
-            self.variables[var] = value
+        if var.name not in self.variables.keys():
+            self.variables[var.name] = value
 
-        self.variables[var] = value
+        self.variables[var.name] = value
 
     def error(self, reason, operation):
         print(f"ERROR: {reason}")
@@ -73,6 +73,9 @@ class Operation:
             case "print":
                 return self.VM.print()
 
+            case "println":
+                return self.VM.println()
+
             case "add":
                 return self.VM.add()
 
@@ -102,6 +105,18 @@ class Operation:
 
             case "jnz":
                 return self.VM.jnz()
+
+            case "jz":
+                return self.VM.jz()
+
+            case "jmp":
+                return self.VM.jmp()
+
+            case "cat":
+                return self.VM.cat()
+
+            case "rand":
+                return self.VM.rand()
 
             case _:
                 self.program.error(f"Unknown operation \"{self.operation}\"", self)

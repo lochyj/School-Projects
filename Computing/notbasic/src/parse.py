@@ -87,8 +87,9 @@ class Analyzer:
                         if reading_string:
                             word += character
                         else:
-                            bound_line.append(self.classify_param(word, False))
-                            word = ""
+                            if word != '':
+                                bound_line.append(self.classify_param(word, False))
+                                word = ""
 
                     case '\"':
                         if reading_string:
@@ -98,9 +99,11 @@ class Analyzer:
                                 else:
                                     bound_line.append(self.classify_param(word, True))
                                     word = ""
+                                    reading_string = False
                             else:
                                 bound_line.append(self.classify_param(word, True))
                                 word = ""
+                                reading_string = False
 
                         else:
                             reading_string = True
@@ -108,7 +111,9 @@ class Analyzer:
                     case _:
                         word += character
 
-            bound_line.append(self.classify_param(word, reading_string))
+            if word != '':
+                bound_line.append(self.classify_param(word, reading_string))
+
             bound_lines.append(bound_line)
 
         return bound_lines
@@ -124,7 +129,6 @@ class Analyzer:
         for params in lines:
             if len(params) < 3:
                 print("ERROR: Line doesn't have enough parameters.")
-                print(params)
                 exit()
 
             try:

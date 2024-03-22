@@ -4,7 +4,11 @@ class String:
 
 class Integer:
     def __init__(self, value) -> None:
-        self.value: int = value
+        if isinstance(value, int):
+            print(value)
+            self.value: int = value
+        else:
+            self.value: int = int(value)
 
 class Variable:
     def __init__(self, name) -> None:
