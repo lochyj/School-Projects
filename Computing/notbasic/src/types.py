@@ -5,7 +5,6 @@ class String:
 class Integer:
     def __init__(self, value) -> None:
         if isinstance(value, int):
-            print(value)
             self.value: int = value
         else:
             self.value: int = int(value)

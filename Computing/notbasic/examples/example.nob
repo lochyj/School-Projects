@@ -2,15 +2,15 @@
 
 ; <- The semicolon indicates that the rest of the line (or the entire line) is a comment.
 
-10 print "Hello, there" ; prints "Hello, there!"
+10 println "Hello, there" ; prints "Hello, there!"
 20 add 10 20 ; adds the numbers 10 and 20
 30 store 20 hello ; Stores the value line 20 outputs as the variable hello
-40 print hello ; Prints the value of the variable hello.
+40 println hello ; Prints the value of the variable hello.
 50 conf "width" ; Gets the character width of the terminal
 60 store 50 terminal_width ; Stores the character width of the terminal in the variable terminal_width
 
 65 var i 20 ; Stores the number value '20' in the variable i
-70 print i
+70 println i
 75 dec i ; Decreases the value of i by one
 76 store 75 i
 80 jnz i 70 ; If the value of i doesn't equal 0, then jump to line 70
