@@ -71,9 +71,6 @@ F = [
 def get_pentomino(pentomino, rotation):
     ...
 
-class MiniMatrix:
-    def __init__(self, width: int, height: int) -> None:
-        self.matrix: list[list[int]] = [[0 for _ in range(height)] for _ in range(width)]
 
 def main():
     with open("./matrix.txt", "w") as file:

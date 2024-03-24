@@ -15,6 +15,77 @@
 # Another option would be to shift all elements over but this is really
 # compute intensive and wastes precious cpu cycles :)
 
+# ------------|
+# Pentominoes |
+# ------------|
+
+U = [
+    "##",
+    "#", # U
+    "##"
+]
+
+X = [
+    " #",
+    "###", # X
+    " #"
+]
+
+Y = [
+    " #",
+    "####" # Y
+]
+
+I = [
+    "#####" # I
+]
+
+P = [
+    "###", # P
+    " ##"
+]
+
+V = [
+    "###",
+    "  #", # V
+    "  #"
+]
+
+T = [
+    "###",
+    " #", # T
+    " #"
+]
+
+N = [
+    "##",
+    " ###" # N
+]
+
+W = [
+    " ##",
+    "##", # W
+    "#"
+]
+
+L = [
+    "####", # L
+    "#"
+]
+
+Z = [
+    "#",
+    "###", # Z
+    "  #"
+]
+
+F = [
+    " #",
+    "###", # F
+    "  #"
+]
+
+
 # --------|
 # Classes |
 # --------|
@@ -34,25 +105,30 @@ class Element:
         self.up = None
         self.down = None
 
-
 class Matrix:
     def __init__(self, rows, columns) -> None:
         self.width = columns
-        self.height = rows + 1
+        self.height = rows
 
-        self.matrix: list[list[Element | Header]] = [[Element() for _ in range(self.height)] for _ in range(self.width)]
+        self.headers: list[Header] = [Header() for _ in range(self.width)]
+        self.matrix: list[list[Element]] = [[Element() for _ in range(self.height)] for _ in range(self.width)]
+
+        self.base_header: Header = Header()
+
+        self.base_header.down = None
+        self.base_header.up = None
+        self.base_header.left = self.headers[len(self.headers) - 1] # Assumes that the width is > 0
+        self.base_header.right = self.headers[0]
+
+        # No comments good luck :)
 
         for row in range(rows):
             for col in range(columns):
 
-                if row == 0:
-                    header = Header()
-                    self.matrix[col][0] = header
-
-                l: Element | Header | None = None
-                r: Element | Header | None = None
-                u: Element | Header | None = None
-                d: Element | Header | None = None
+                l: Element = None
+                r: Element = None
+                u: Element | Header = self.headers[col]
+                d: Element | Header = self.headers[col]
 
                 if row != 0 and row != self.width:
                     u = self.matrix[col][row - 1]
@@ -66,22 +142,49 @@ class Matrix:
                 if col <= columns - 2:
                     r = self.matrix[col + 1][row]
 
-                el: Element | Header = self.matrix[col][row]
+                el: Element = self.matrix[col][row]
                 el.left = l
                 el.right = r
                 el.up = u
                 el.down = d
 
-                if row != 0:
-                    el.header = self.matrix[columns][0]
+                if isinstance(u, Header):
+                    u.down = el
+
+                if isinstance(d, Header):
+                    d.up = el
+
+                el.header = self.headers[col]
 
                 self.matrix[col][row] = el
+
+        for i, header in enumerate(self.headers):
+            if i == 0:
+                header.left = self.base_header
+            else:
+                header.left = self.headers[i - 1]
+
+            if i == len(self.headers) - 1:
+                header.right = self.base_header
+            else:
+                header.right = self.headers[i + 1]
+
+class Solver:
+    def __init__(self) -> None:
+        self.matrix = Matrix(1568, 72)
+
+    def create_matrix():
+        # See generate_matrix.py
+        ...
+
 
 # -----|
 # Init |
 # -----|
 
 matrix = Matrix(1568, 72)
+
+headers = matrix.headers
 
 # The first 12 columns of the matrix are for each of the 12 pentominoes.
 F = matrix.matrix[0]
@@ -97,4 +200,4 @@ X = matrix.matrix[9]
 Y = matrix.matrix[10]
 Z = matrix.matrix[11]
 
-
+print(matrix.base_header.left.down) # Works!
