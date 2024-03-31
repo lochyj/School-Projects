@@ -39,7 +39,23 @@ class VM:
 
         return True
 
-    # PUB:
+    def assert_params(self, params, /, num, min, max):
+
+        # If we have been given an exact number of parameters that are needed:
+        # Check that is the case and check that there are exactly the correct
+        # number of parameters
+        if not (len(params) != num) and num != None:
+            self.program.error(f"{self.operation.operation} requires exactly {num} arguments, {len(params)} were given instead.", self.operation)
+
+        # If we have not been given an exact number but a range instead,
+        # Check that we have been given the min and max values and then
+        # ensure that length of the parameters is between those values
+        if not (len(params) <= max) and not(len(params) >= min) and min != None and max != None:
+            self.program.error(f"{self.operation.operation} requires between {min} and {max} arguments, {len(params)} were given instead.", self.operation)
+
+        return
+
+    # PUBLIC:
 
     def print(self):
         # Format:
@@ -358,5 +374,39 @@ class VM:
         if mn == None or mx == None:
             self.program.error("Cannot use strings as random range", self.operation)
 
-        self.operation.output = Integer(random.randint(mn, mx))
+        # Get the random value from the range, but mn and mx need to be an integer for randint.
+        self.operation.output = Integer(random.randint(int(mn), int(mx)))
         return None
+
+    def genfb(self):
+        """Generates a framebuffer object for the user to interface with using the putpixel operand
+        """
+        # Format:
+        # <line_no> genfb <param1> <param2>
+        # <param1> -> FB Width
+        # <param2> -> FB Height
+
+        param1 = self.operation.params[0]
+        param2 = self.operation.params[1]
+
+        mn = self.get_value(param1, check_type=Integer)
+        mx = self.get_value(param2, check_type=Integer)
+
+        if mn == None or mx == None:
+            self.program.error("Cannot use strings as random range", self.operation)
+
+        self.operation.output = ...
+
+    def clearfb(self):
+        # Format:
+        # <line_no> clearfb <param1>
+        # <param1> -> FB Object
+
+        param1 = self.operation.params[0]
+
+        value = self.get_value(param1, check_type=Integer)
+
+        if value == None:
+            self.program.error("Cannot use strings as random range", self.operation)
+
+        self.operation.output = ...

@@ -4,10 +4,7 @@ class String:
 
 class Integer:
     def __init__(self, value) -> None:
-        if isinstance(value, int):
-            self.value: int = value
-        else:
-            self.value: int = int(value)
+        self.value: int = float(value)
 
 class Variable:
     def __init__(self, name) -> None:

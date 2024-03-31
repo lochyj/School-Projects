@@ -1,0 +1,5 @@
+10 print "Hello, "
+20 print "there!\n"
+
+30 println "Hello, there!"
+eof
