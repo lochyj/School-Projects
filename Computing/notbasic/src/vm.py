@@ -1,6 +1,7 @@
 # This is the NoB vm (The NotBasic virtual machine)
 import os
 import random
+import math
 
 from src.types import *
 
@@ -10,7 +11,28 @@ class VM:
         self.operation = operation
         self.program = program
 
-        self.exec = None
+        self.functions = {
+            "print": self.print,
+            "println": self.println,
+            "add": self.add,
+            "sub": self.sub,
+            "mul": self.mul,
+            "div": self.div,
+            "store": self.store,
+            "conf": self.conf,
+            "var": self.var,
+            "inc": self.inc,
+            "dec": self.dec,
+            "jnz": self.jnz,
+            "jz": self.jz,
+            "jmp": self.jmp,
+            "cat": self.cat,
+            "rand": self.rand,
+            "sin": self.sin,
+            "cos": self.cos,
+            "tan": self.tan,
+            "pi": self.pi,
+        }
 
     # PRIVATE:
 
@@ -54,6 +76,15 @@ class VM:
             self.program.error(f"{self.operation.operation} requires between {min} and {max} arguments, {len(params)} were given instead.", self.operation)
 
         return
+
+    def exec(self, keyword):
+        # Execute the function associated with a keyword / operand
+        try:
+            self.functions[keyword]()
+
+        except KeyError:
+            # No functions were found. Error.
+            self.program.error(f"Operand {keyword} was not found.", self.operation)
 
     # PUBLIC:
 
@@ -378,35 +409,56 @@ class VM:
         self.operation.output = Integer(random.randint(int(mn), int(mx)))
         return None
 
-    def genfb(self):
-        """Generates a framebuffer object for the user to interface with using the putpixel operand
-        """
+    def sin(self):
         # Format:
-        # <line_no> genfb <param1> <param2>
-        # <param1> -> FB Width
-        # <param2> -> FB Height
-
-        param1 = self.operation.params[0]
-        param2 = self.operation.params[1]
-
-        mn = self.get_value(param1, check_type=Integer)
-        mx = self.get_value(param2, check_type=Integer)
-
-        if mn == None or mx == None:
-            self.program.error("Cannot use strings as random range", self.operation)
-
-        self.operation.output = ...
-
-    def clearfb(self):
-        # Format:
-        # <line_no> clearfb <param1>
-        # <param1> -> FB Object
+        # <line_no> sin <param1>
+        # <param1> -> angle in radians
 
         param1 = self.operation.params[0]
 
         value = self.get_value(param1, check_type=Integer)
 
         if value == None:
-            self.program.error("Cannot use strings as random range", self.operation)
+            self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = ...
+        self.operation.output = Integer(math.sin(value))
+        return None
+
+    def cos(self):
+        # Format:
+        # <line_no> cos <param1>
+        # <param1> -> angle in radians
+
+        param1 = self.operation.params[0]
+
+        value = self.get_value(param1, check_type=Integer)
+
+        if value == None:
+            self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
+
+        self.operation.output = Integer(math.cos(value))
+        return None
+
+
+    def tan(self):
+        # Format:
+        # <line_no> tan <param1>
+        # <param1> -> angle in radians
+
+        param1 = self.operation.params[0]
+
+        value = self.get_value(param1, check_type=Integer)
+
+        if value == None:
+            self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
+
+        self.operation.output = Integer(math.tan(value))
+        return None
+
+    def pi(self):
+        # Format:
+        # <line_no> pi
+
+        # Return the value of pi!
+        self.operation.output = Integer(math.pi)
+        return None

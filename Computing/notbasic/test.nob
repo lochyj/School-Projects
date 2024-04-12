@@ -1,6 +1,0 @@
-10 rand 0 1000 ; There is an error somewhere here... TODO: Find it!!
-20 store 10 x
-30 div x 1000
-40 store 30 x
-50 println x
-eof
