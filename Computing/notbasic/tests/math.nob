@@ -1,0 +1,25 @@
+10 add 10 10
+20 store 10 x
+30 println x
+
+40 sub 10 10
+50 store 40 x
+60 println x
+
+70 mul 10 10
+80 store 70 x
+90 println x
+
+100 div 10 10
+110 store 100 x
+120 println x
+
+130 inc 10
+140 store 130 x
+150 println x
+
+160 dec 10
+170 store 160 x
+180 println x
+
+eof

@@ -63,12 +63,9 @@ class Program:
 
             if jmp != None:
                 op = self.get_operation_by_line(jmp)
-
-                if op == None:
-                    break
-
-                continue
-            op = self.get_next_operation_by_line(op.line)
+                print(op)
+            else:
+                op = self.get_next_operation_by_line(op.line)
 class Operation:
     def __init__(self, program) -> None:
         self.line: int = 0

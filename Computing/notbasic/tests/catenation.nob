@@ -7,5 +7,5 @@
 60 store 50 b
 
 70 println a
-65 println b
+80 println b
 eof

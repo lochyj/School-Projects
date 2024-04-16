@@ -19,7 +19,6 @@ def main():
     file: any = None
 
     try:
-        # TODO: use argparse instead
         file = open_file(sys.argv[1])
     except:
         file = get_user_in()

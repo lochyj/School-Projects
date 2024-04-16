@@ -83,12 +83,13 @@ class VM:
     def exec(self, keyword):
         # Execute the function associated with a keyword / operand
         try:
-            self.functions[keyword]()
+            return self.functions[keyword]()
 
         except KeyError:
             # No functions were found. Error.
             self.program.error(f"Operand {keyword} was not found.", self.operation)
 
+            return None
     # PUBLIC:
 
     def print(self):

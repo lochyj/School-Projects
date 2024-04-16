@@ -1,0 +1,4 @@
+10 var x 10
+20 println x
+30 jmp 10
+eof

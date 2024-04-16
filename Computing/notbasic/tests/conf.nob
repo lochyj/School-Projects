@@ -1,0 +1,13 @@
+10 conf "os"
+20 store 10 x
+30 println x
+
+40 conf "width"
+50 store 40 x
+60 println x
+
+70 conf "height"
+80 store 70 x
+90 println x
+
+eof

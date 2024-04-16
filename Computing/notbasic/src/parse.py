@@ -23,9 +23,10 @@ class Analyzer:
             ]
         }
 
-    def extract_type(self, object):
-        ...
-
+    # Iterate over each line and traverse the characters
+    # until we find a ';' semicolon character which delimits
+    # a comment. Remove all following characters
+    # TODO: if the semicolon is in a string, do nothing.
     def strip_comments(self, lines: list[str]):
         for i, line in enumerate(lines):
             if ';' in line:
@@ -37,8 +38,6 @@ class Analyzer:
 
                 if cut_index != None:
                     lines[i] = line[0:cut_index].strip()
-                else:
-                    ... # Something went terribly wrong...
 
         return lines
 
@@ -75,7 +74,7 @@ class Analyzer:
     def bind_lines(self, lines):
         bound_lines = []
 
-        for i, line in enumerate(lines):
+        for line in lines:
             reading_string = False
             word = ""
             bound_line = []
