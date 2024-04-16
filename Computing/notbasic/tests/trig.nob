@@ -1,0 +1,31 @@
+10 pi
+20 store 10 pi
+30 div pi 2
+40 store 30 x
+45 var y 1
+
+50 sin x
+60 store 50 sin
+
+70 cos x
+80 store 70 cos
+
+90 tan x
+100 store 90 tan
+
+110 arcsin y
+120 store 110 arcsin
+
+130 arccos y
+140 store 130 arccos
+
+150 arctan y
+160 store 150 arctan
+
+200 println sin
+210 println cos
+220 println tan
+230 println arcsin
+240 println arccos
+250 println arctan
+eof

@@ -1,6 +1,11 @@
-10 var x "Hello, "
-20 var y "there!"
+10 var x "Hello "
+20 var y "there,"
+25 var z "Jim!"
 30 cat x y
-40 store 30 z
-50 println z
+40 store 30 a
+50 cat a z
+60 store 50 b
+
+70 println a
+65 println b
 eof

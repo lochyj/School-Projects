@@ -1,5 +1,10 @@
-10 print "Hello, "
-20 print "there!\n"
+10 var x "Hello, World!"
+20 var y "Hello, World!\n"
 
-30 println "Hello, there!"
+30 print x
+40 print y
+
+50 println y ; Will print 2 new lines at the end of the string
+60 println x
+
 eof

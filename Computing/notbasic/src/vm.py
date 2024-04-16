@@ -32,6 +32,9 @@ class VM:
             "cos": self.cos,
             "tan": self.tan,
             "pi": self.pi,
+            "arcsin": self.arcsin,
+            "arccos": self.arccos,
+            "arctan": self.arctan,
         }
 
     # PRIVATE:
@@ -99,6 +102,8 @@ class VM:
             ...
 
         value = self.get_value(param)
+        # Convert the value to a string and then replace all of the new lines with real new line characters.
+        # Then print it with no new line at the end
         print(str(value).replace("\\n", '\n'), end='')
         return None
 
@@ -113,7 +118,9 @@ class VM:
             ...
 
         value = self.get_value(param)
-        print(str(value).replace("\\n", '\n'))
+        # Convert the value to a string and then replace all of the new lines with real new line characters.
+        # Then print it with a new line at the end
+        print(str(value).replace("\\n", '\n'), end='\n')
         return None
 
     def add(self):
@@ -461,4 +468,49 @@ class VM:
 
         # Return the value of pi!
         self.operation.output = Integer(math.pi)
+        return None
+
+    def arcsin(self):
+        # Format:
+        # <line_no> arcsin <param1>
+        # <param1> -> angle in radians
+
+        param1 = self.operation.params[0]
+
+        value = self.get_value(param1, check_type=Integer)
+
+        if value == None:
+            self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
+
+        self.operation.output = Integer(math.asin(value))
+        return None
+
+    def arccos(self):
+        # Format:
+        # <line_no> arccos <param1>
+        # <param1> -> angle in radians
+
+        param1 = self.operation.params[0]
+
+        value = self.get_value(param1, check_type=Integer)
+
+        if value == None:
+            self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
+
+        self.operation.output = Integer(math.acos(value))
+        return None
+
+    def arctan(self):
+        # Format:
+        # <line_no> arctan <param1>
+        # <param1> -> angle in radians
+
+        param1 = self.operation.params[0]
+
+        value = self.get_value(param1, check_type=Integer)
+
+        if value == None:
+            self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
+
+        self.operation.output = Integer(math.atan(value))
         return None

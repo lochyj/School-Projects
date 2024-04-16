@@ -127,7 +127,7 @@ class Analyzer:
         parsed_lines = []
 
         for params in lines:
-            if len(params) < 3:
+            if len(params) < 2:
                 print("ERROR: Line doesn't have enough parameters.")
                 exit()
 
