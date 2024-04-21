@@ -5,12 +5,18 @@ import math
 
 from src.types import *
 
-# We create an instance for each operation.
+# We create a VM instance for each operation.
 class VM:
     def __init__(self, operation, program) -> None:
+
+        # Store the parent class for easy access:
         self.operation = operation
+
+        # Store the program instance so we can use it to throw errors
+        # when we need to.
         self.program = program
 
+        # Below are all of the operations that the language can perform.
         self.functions = {
             "print": self.print,
             "println": self.println,
@@ -37,7 +43,10 @@ class VM:
             "arctan": self.arctan,
         }
 
-    # PRIVATE:
+
+    # -----------------|
+    # Helper functions |
+    # -----------------|
 
     # Given a type object, convert it to its value
     def get_value(self, object, check_type=None):
@@ -46,7 +55,6 @@ class VM:
         # and recursively call the function again to get the actual value
         if self.assert_type(object, Variable):
             return self.get_value(self.program.get_variable(object, self.operation), check_type=check_type)
-            # Return it once we've found it...
 
         # If we are checking the type, assert that it is the given type
         if check_type != None:
@@ -58,39 +66,57 @@ class VM:
 
     # Simple helper function that probably isn't needed.
     def assert_type(self, object, type):
+
         # If the object isn't an instance of the specified type
         if not isinstance(object, type):
             return False
 
         return True
 
-    def assert_params(self, params, /, num, min, max):
+    # Helper function to check if the operation was passed the correct number
+    # of arguments
+    def assert_params(self, params, /, num=None, *, min=None, max=None):
 
         # If we have been given an exact number of parameters that are needed:
         # Check that is the case and check that there are exactly the correct
         # number of parameters
-        if not (len(params) != num) and num != None:
+        if not (len(params) == num) and num != None:
             self.program.error(f"{self.operation.operation} requires exactly {num} arguments, {len(params)} were given instead.", self.operation)
 
         # If we have not been given an exact number but a range instead,
         # Check that we have been given the min and max values and then
         # ensure that length of the parameters is between those values
-        if not (len(params) <= max) and not(len(params) >= min) and min != None and max != None:
+        if min != None and max != None and (not(len(params) <= max) or not(len(params) >= min)):
             self.program.error(f"{self.operation.operation} requires between {min} and {max} arguments, {len(params)} were given instead.", self.operation)
 
         return
 
+    # Helper function for executing the correct operation from the operation
+    # keyword. i.e "store" would translate to self.store()
     def exec(self, keyword):
         # Execute the function associated with a keyword / operand
         try:
             return self.functions[keyword]()
+            # The value that the above function returns is either None or a Number type.
+            # If the value is a number then the program will jump to the line with the
+            # corresponding number. I.e: `jmp 10` will return Number(10) which corresponds
+            # to the line delineated with the number 10, for example `10 println "Hello, World!"`.
 
         except KeyError:
             # No functions were found. Error.
             self.program.error(f"Operand {keyword} was not found.", self.operation)
 
             return None
-    # PUBLIC:
+
+
+    # -----------------------|
+    # Operation VM functions |
+    # -----------------------|
+
+    # The below functions have very few comments as they mostly explain themselves through
+    # the name of the function. Most functions collect the parameters they need to then do
+    # the described operation on the value of those parameters. Some comments have been
+    # added where the code is especially convoluted.
 
     def print(self):
         # Format:
@@ -98,11 +124,10 @@ class VM:
 
         param = self.operation.params[0]
 
-        if len(self.operation.params) > 1:
-            # TODO: Throw warning
-            ...
+        self.assert_params(self.operation.params, 1)
 
         value = self.get_value(param)
+
         # Convert the value to a string and then replace all of the new lines with real new line characters.
         # Then print it with no new line at the end
         print(str(value).replace("\\n", '\n'), end='')
@@ -114,9 +139,7 @@ class VM:
 
         param = self.operation.params[0]
 
-        if len(self.operation.params) > 1:
-            # TODO: Throw warning
-            ...
+        self.assert_params(self.operation.params, 1)
 
         value = self.get_value(param)
         # Convert the value to a string and then replace all of the new lines with real new line characters.
@@ -129,19 +152,21 @@ class VM:
         # <line_no> add <param1> <param2>
         # -> <param1> + <param2>
 
+        self.assert_params(self.operation.params, 2)
+
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
         if self.assert_type(param1, String) or self.assert_type(param2, String):
             self.program.error("Cannot add Strings", self.operation)
 
-        a = self.get_value(param1, check_type=Integer)
-        b = self.get_value(param2, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
+        b = self.get_value(param2, check_type=Number)
 
         if a == None or b == None:
             self.program.error("Cannot add Strings", self.operation)
 
-        self.operation.output = Integer(a + b)
+        self.operation.output = Number(a + b)
         return None
 
     def sub(self):
@@ -149,19 +174,21 @@ class VM:
         # <line_no> sub <param1> <param2>
         # -> <param1> - <param2>
 
+        self.assert_params(self.operation.params, 2)
+
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
         if self.assert_type(param1, String) or self.assert_type(param2, String):
             self.program.error("Cannot subtract Strings", self.operation)
 
-        a = self.get_value(param1, check_type=Integer)
-        b = self.get_value(param2, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
+        b = self.get_value(param2, check_type=Number)
 
         if a == None or b == None:
             self.program.error("Cannot subtract Strings", self.operation)
 
-        self.operation.output = Integer(a - b)
+        self.operation.output = Number(a - b)
         return None
 
     def mul(self):
@@ -169,19 +196,21 @@ class VM:
         # <line_no> mul <param1> <param2>
         # -> <param1> * <param2>
 
+        self.assert_params(self.operation.params, 2)
+
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
         if self.assert_type(param1, String) or self.assert_type(param2, String):
             self.program.error("Cannot multiply Strings", self.operation)
 
-        a = self.get_value(param1, check_type=Integer)
-        b = self.get_value(param2, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
+        b = self.get_value(param2, check_type=Number)
 
         if a == None or b == None:
             self.program.error("Cannot multiply Strings", self.operation)
 
-        self.operation.output = Integer(a * b)
+        self.operation.output = Number(a * b)
         return None
 
     def div(self):
@@ -189,22 +218,24 @@ class VM:
         # <line_no> div <param1> <param2>
         # -> <param1> / <param2>
 
+        self.assert_params(self.operation.params, 2)
+
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
         if self.assert_type(param1, String) or self.assert_type(param2, String):
-            self.program.error("Cannot multiply Strings", self.operation)
+            self.program.error("Cannot divide Strings", self.operation)
 
-        a = self.get_value(param1, check_type=Integer)
-        b = self.get_value(param2, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
+        b = self.get_value(param2, check_type=Number)
 
         if a == None or b == None:
-            self.program.error("Cannot multiply Strings", self.operation)
+            self.program.error("Cannot divide Strings", self.operation)
 
         if b == 0:
             self.program.error("Cannot divide a number by 0", self.operation)
 
-        self.operation.output = Integer(a / b)
+        self.operation.output = Number(a / b)
         return None
 
     def store(self):
@@ -212,13 +243,12 @@ class VM:
         # <line_no> store <param1> <param2>
         # -> <param2> = <param1> (var = line_num.output)
 
-        if len(self.operation.params) != 2:
-            ... # TODO: Throw warning or error.
+        self.assert_params(self.operation.params, 2)
 
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
-        param1_value = self.get_value(param1, check_type=Integer)
+        param1_value = self.get_value(param1, check_type=Number)
 
         if param1_value == None:
             self.program.error("Line number must be an integer type", self.operation)
@@ -234,13 +264,15 @@ class VM:
         # Format:
         # <line_no> conf <param1>
 
+        self.assert_params(self.operation.params, 1)
+
         param = self.operation.params[0].value
         try:
             match param:
                 case "width":
-                    self.operation.output = Integer(os.get_terminal_size()[0])
+                    self.operation.output = Number(os.get_terminal_size()[0])
                 case "height":
-                    self.operation.output = Integer(os.get_terminal_size()[1])
+                    self.operation.output = Number(os.get_terminal_size()[1])
                 case "os":
                     self.operation.output = String(os.name)
                 case _:
@@ -254,6 +286,8 @@ class VM:
         # Format:
         # <line_no> store <param1> <param2>
         # -> <param1> = <param2> (var = value)
+
+        self.assert_params(self.operation.params, 2)
 
         if len(self.operation.params) != 2:
             ... # TODO: Throw warning or error.
@@ -272,17 +306,19 @@ class VM:
         # <line_no> dec <param1>
         # -> <param1>--
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
         if self.assert_type(param1, String):
             self.program.error("Cannot decrease a Strings", self.operation)
 
-        a = self.get_value(param1, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
 
         if a == None:
             self.program.error("Cannot decrease a String", self.operation)
 
-        self.operation.output = Integer(a - 1)
+        self.operation.output = Number(a - 1)
         return None
 
     def inc(self):
@@ -290,88 +326,83 @@ class VM:
         # <line_no> inc <param1>
         # -> <param1>++
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
         if self.assert_type(param1, String):
             self.program.error("Cannot increase a Strings", self.operation)
 
-        a = self.get_value(param1, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
 
         if a == None:
             self.program.error("Cannot increase a String", self.operation)
 
-        self.operation.output = Integer(a + 1)
+        self.operation.output = Number(a + 1)
         return None
 
     def jnz(self):
         # Format:
         # <line_no> jnz <param1> <param2>
-        # <param1> -> var/num to compare
-        # <param2> -> line number
+        # <param1> -> line number
+        # <param2> -> var/num to compare
 
-        if len(self.operation.params) != 2:
-            ... # TODO: Throw warning or error.
+        self.assert_params(self.operation.params, 2)
 
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
-        p2_val = self.get_value(param2, check_type=Integer)
-
-        a = self.get_value(param1, check_type=Integer)
-        b = self.get_value(param2, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
+        b = self.get_value(param2, check_type=Number)
 
         if a == None or b == None:
-            self.program.error("Cannot compare a String", self.operation)
+            self.program.error("Cannot jump to or compare a String", self.operation)
 
-        # If a is equal to 0, then we dont need to jump anywhere, continue onwards!
-        if a == 0:
+        # If b is equal to 0, then we dont need to jump anywhere, continue onwards!
+        if b == 0:
             return None
 
-        if self.program.get_operation_by_line(b) == None:
-            self.program.error(f"Line {param2} cannot be found", self.operation)
+        if self.program.get_operation_by_line(a) == None:
+            self.program.error(f"Line {a} cannot be found", self.operation)
 
-        return p2_val
+        return a
 
     def jz(self):
         # Format:
         # <line_no> jz <param1> <param2>
-        # <param1> -> var/num to compare
-        # <param2> -> line number
+        # <param1> -> line number
+        # <param2> -> var/num to compare
 
-        if len(self.operation.params) != 2:
-            ... # TODO: Throw warning or error.
+        self.assert_params(self.operation.params, 2)
 
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
-        p2_val = self.get_value(param2, check_type=Integer)
-
-        a = self.get_value(param1, check_type=Integer)
-        b = self.get_value(param2, check_type=Integer)
+        a = self.get_value(param1, check_type=Number)
+        b = self.get_value(param2, check_type=Number)
 
         if a == None or b == None:
-            self.program.error("Cannot compare a String", self.operation)
+            self.program.error("Cannot jump to or compare a String", self.operation)
 
-        # If a doesn't equal to 0, then we dont need to jump anywhere, continue onwards!
-        if a != 0:
+        # If b is equal to 0, then we dont need to jump anywhere, continue onwards!
+        if b != 0:
             return None
 
-        if self.program.get_operation_by_line(b) == None:
-            self.program.error(f"Line {param2} cannot be found", self.operation)
+        if self.program.get_operation_by_line(a) == None:
+            self.program.error(f"Line {a} cannot be found", self.operation)
 
-        return p2_val
+        return a
 
     def jmp(self):
         # Format:
         # <line_no> jmp <param1>
         # <param1> -> line number
 
-        if len(self.operation.params) != 2:
-            ... # TODO: Throw warning or error.
+        self.assert_params(self.operation.params, 1)
 
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("Cannot jump to a String", self.operation)
@@ -384,6 +415,8 @@ class VM:
     def cat(self):
         # Format:
         # <line_no> cat <param1> <param2>
+
+        self.assert_params(self.operation.params, 2)
 
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
@@ -404,17 +437,19 @@ class VM:
         # <param1> -> Min value
         # <param2> -> Max value
 
+        self.assert_params(self.operation.params, 2)
+
         param1 = self.operation.params[0]
         param2 = self.operation.params[1]
 
-        mn = self.get_value(param1, check_type=Integer)
-        mx = self.get_value(param2, check_type=Integer)
+        mn = self.get_value(param1, check_type=Number)
+        mx = self.get_value(param2, check_type=Number)
 
         if mn == None or mx == None:
             self.program.error("Cannot use strings as random range", self.operation)
 
         # Get the random value from the range, but mn and mx need to be an integer for randint.
-        self.operation.output = Integer(random.randint(int(mn), int(mx)))
+        self.operation.output = Number(random.randint(int(mn), int(mx)))
         return None
 
     def sin(self):
@@ -422,14 +457,16 @@ class VM:
         # <line_no> sin <param1>
         # <param1> -> angle in radians
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = Integer(math.sin(value))
+        self.operation.output = Number(math.sin(value))
         return None
 
     def cos(self):
@@ -437,14 +474,16 @@ class VM:
         # <line_no> cos <param1>
         # <param1> -> angle in radians
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = Integer(math.cos(value))
+        self.operation.output = Number(math.cos(value))
         return None
 
 
@@ -453,22 +492,26 @@ class VM:
         # <line_no> tan <param1>
         # <param1> -> angle in radians
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = Integer(math.tan(value))
+        self.operation.output = Number(math.tan(value))
         return None
 
     def pi(self):
         # Format:
         # <line_no> pi
 
+        self.assert_params(self.operation.params, 0)
+
         # Return the value of pi!
-        self.operation.output = Integer(math.pi)
+        self.operation.output = Number(math.pi)
         return None
 
     def arcsin(self):
@@ -476,14 +519,16 @@ class VM:
         # <line_no> arcsin <param1>
         # <param1> -> angle in radians
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = Integer(math.asin(value))
+        self.operation.output = Number(math.asin(value))
         return None
 
     def arccos(self):
@@ -491,14 +536,16 @@ class VM:
         # <line_no> arccos <param1>
         # <param1> -> angle in radians
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = Integer(math.acos(value))
+        self.operation.output = Number(math.acos(value))
         return None
 
     def arctan(self):
@@ -506,12 +553,14 @@ class VM:
         # <line_no> arctan <param1>
         # <param1> -> angle in radians
 
+        self.assert_params(self.operation.params, 1)
+
         param1 = self.operation.params[0]
 
-        value = self.get_value(param1, check_type=Integer)
+        value = self.get_value(param1, check_type=Number)
 
         if value == None:
             self.program.error("You must use an integer or float value for trigonometric functions.", self.operation)
 
-        self.operation.output = Integer(math.atan(value))
+        self.operation.output = Number(math.atan(value))
         return None

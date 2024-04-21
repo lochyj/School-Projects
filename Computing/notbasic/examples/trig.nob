@@ -1,8 +1,0 @@
-10 pi
-20 store 10 pi
-30 div pi 2
-40 store 30 x
-50 sin x ; This can also be any trig function
-60 store 50 x
-70 println x
-eof

@@ -1,14 +1,16 @@
+
+# A simple python like input system for when the user wants to use the interpreter in the command line.
 def get_user_in():
     program = []
 
-    print("Type you NotBasic program below. To finish the program create a new line and type `eof` and press enter.")
+    print("Type your NotBasic program below. To finish the program create a new line and type `eof` and press enter.")
 
     while True:
-        inp = input('> ')
+        line = input('> ')
 
-        if inp == "eof":
+        if line == "eof":
             break
 
-        program.append(inp)
+        program.append(line)
 
     return program

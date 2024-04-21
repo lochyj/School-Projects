@@ -1,0 +1,6 @@
+10 var x 100
+20 println x
+30 dec x
+40 store 30 x
+50 jnz 20 x
+eof

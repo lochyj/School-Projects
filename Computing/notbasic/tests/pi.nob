@@ -1,0 +1,4 @@
+10 pi
+20 store 10 pi
+30 println pi
+eof
